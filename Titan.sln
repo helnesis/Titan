@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Domain", "src\Titan.Domain\Titan.Domain.csproj", "{6BF8F366-7488-457E-A6BC-14AB608E622D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Tests", "src\Titan.Tests\Titan.Tests.csproj", "{98A83986-0C76-4054-B8D1-2521E71CC83D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BF8F366-7488-457E-A6BC-14AB608E622D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BF8F366-7488-457E-A6BC-14AB608E622D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BF8F366-7488-457E-A6BC-14AB608E622D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BF8F366-7488-457E-A6BC-14AB608E622D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
