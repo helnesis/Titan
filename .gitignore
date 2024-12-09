@@ -403,5 +403,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # AppSettings
-./src/Titan.API/appsettings.json
-./src/Titan.API/appsettings.Development.json
+/src/Titan.API/appsettings.json
+/src/Titan.API/appsettings.Development.json
