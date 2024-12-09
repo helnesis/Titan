@@ -1,5 +1,5 @@
 ﻿using Titan.Domain.Builders.Interfaces.Creatures;
-using Titan.Domain.Entities.Base;
+using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 
 namespace Titan.Tests;
@@ -64,6 +64,5 @@ public class BuilderTests
             Assert.That(creatureSpell.CreatureEntry, Is.EqualTo(identifier));
             Assert.That(creatureSpell.SpellEntry, Is.EqualTo(spellIdentifier));
         });
-        
     }
 }

@@ -1,8 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35506.116 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Domain", "src\Titan.Domain\Titan.Domain.csproj", "{6BF8F366-7488-457E-A6BC-14AB608E622D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Tests", "src\Titan.Tests\Titan.Tests.csproj", "{98A83986-0C76-4054-B8D1-2521E71CC83D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Persistence", "src\Titan.Persistence\Titan.Persistence.csproj", "{0CEB8845-3C1D-40FA-A6BE-F964931ADB78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.API", "src\Titan.API\Titan.API.csproj", "{D0177E09-E64E-443E-88C6-48AD3C2A04FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +25,16 @@ Global
 		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98A83986-0C76-4054-B8D1-2521E71CC83D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CEB8845-3C1D-40FA-A6BE-F964931ADB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CEB8845-3C1D-40FA-A6BE-F964931ADB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CEB8845-3C1D-40FA-A6BE-F964931ADB78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CEB8845-3C1D-40FA-A6BE-F964931ADB78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0177E09-E64E-443E-88C6-48AD3C2A04FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0177E09-E64E-443E-88C6-48AD3C2A04FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0177E09-E64E-443E-88C6-48AD3C2A04FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0177E09-E64E-443E-88C6-48AD3C2A04FF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

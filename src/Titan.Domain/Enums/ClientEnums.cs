@@ -1,5 +1,5 @@
 ﻿namespace Titan.Domain.Enums;
-public enum ClientLocale : byte
+public enum ClientEnums : byte
 {
     enUS = 0,
     

@@ -1,3 +1,8 @@
-﻿namespace Titan.Domain.Entities.Creatures;
+﻿using Titan.Domain.Entities.Base;
 
-public record CreatureTemplate();
+namespace Titan.Domain.Entities.Creatures;
+
+public record CreatureTemplate : Entity
+{
+    internal CreatureTemplate(Identifier identifier) : base(identifier) { }
+}

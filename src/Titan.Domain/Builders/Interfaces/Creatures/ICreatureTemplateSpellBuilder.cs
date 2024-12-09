@@ -1,5 +1,5 @@
 ﻿using Titan.Domain.Builders.Base;
-using Titan.Domain.Entities.Base;
+using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 
 namespace Titan.Domain.Builders.Interfaces.Creatures;

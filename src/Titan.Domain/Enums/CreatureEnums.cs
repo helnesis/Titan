@@ -241,5 +241,7 @@ public enum CreatureFamily : ushort
 
     Mammoth = 300,
 
-    Incubus = 302
+    Incubus = 302,
+
+    LesserDragonkin = 303,
 }

@@ -1,4 +1,4 @@
-﻿using Titan.Domain.Entities.Base;
+﻿using Titan.Domain.Entities;
 
 namespace Titan.Tests;
 
