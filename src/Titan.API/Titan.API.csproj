@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Titan.Domain\Titan.Domain.csproj" />
     <ProjectReference Include="..\Titan.Persistence\Titan.Persistence.csproj" />
   </ItemGroup>

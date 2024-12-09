@@ -1,6 +1,9 @@
+using Titan.API.Services;
 using Titan.Persistence;
 using Titan.Persistence.Factories;
 using Titan.Persistence.Factories.Base;
+using Titan.Persistence.Repositories.Implementations;
+using Titan.Persistence.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,12 @@ builder.Services.AddSingleton<IDatabaseConnectionFactory, MySqlDatabaseConnectio
 
 // Database connection manager
 builder.Services.AddSingleton<DatabaseConnectionMgr>();
+
+// Repositories
+builder.Services.AddScoped<ICreatureRepository, CreatureRepository>();
+
+// API internal services
+builder.Services.AddScoped<CreatureService>();
 
 
 var app = builder.Build();
