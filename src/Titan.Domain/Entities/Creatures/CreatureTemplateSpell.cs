@@ -20,15 +20,12 @@ public sealed record CreatureTemplateSpell
     /// The spell entry.
     /// </summary>
     public Identifier SpellEntry { get; init; }
-    
-    /// <summary>
-    /// Initialize a new instance of <see cref="CreatureTemplateSpell"/>.
-    /// </summary>
-    /// <param name="creatureEntry">Creature entry</param>
-    /// <param name="index">Spell index</param>
-    /// <param name="spellEntry">Spell entry</param>
+
     internal CreatureTemplateSpell(Identifier creatureEntry, byte index, Identifier spellEntry) => 
         (CreatureEntry, Index, SpellEntry) = (creatureEntry, index, spellEntry);
 
+    /// <summary>
+    /// Creature template spell builder.
+    /// </summary>
     public static ICreatureTemplateSpellBuilder Builder => new CreatureTemplateSpellBuilder();
 }

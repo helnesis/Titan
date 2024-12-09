@@ -8,6 +8,7 @@ public sealed class CreatureTemplateSparringBuilder : ICreatureTemplateSparringB
 {
     private Identifier _creatureEntry;
     private float _noNpcDamageBelowHealthPct;
+
     public CreatureTemplateSparring Build()
         => new(_creatureEntry, _noNpcDamageBelowHealthPct);
 
