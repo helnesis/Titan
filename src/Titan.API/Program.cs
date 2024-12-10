@@ -30,5 +30,6 @@ builder.Services.AddScoped<CreatureService>();
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
+app.MapGet("/pow/{x}", (int x) => Math.Pow(x, 10).ToString());
 
 app.Run();

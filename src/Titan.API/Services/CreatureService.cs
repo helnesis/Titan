@@ -4,5 +4,4 @@ namespace Titan.API.Services;
 
 public sealed class CreatureService(ICreatureRepository creatureRepository)
 {
-    
 }

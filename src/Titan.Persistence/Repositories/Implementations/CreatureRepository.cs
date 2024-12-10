@@ -7,18 +7,24 @@ namespace Titan.Persistence.Repositories.Implementations;
 
 public sealed class CreatureRepository(DatabaseConnectionMgr connectionMgr) : ICreatureRepository
 {
-    public async Task CreateAsync(CreatureTemplate entity)
+    public Task CreateAsync(CreatureTemplate entity)
     {
         throw new NotImplementedException();
     }
 
     public Task DeleteAsync(CreatureTemplate entity)
     {
-        using var connection = connectionMgr.GetWorldDatabase();
-        return connection.ExecuteAsync(
-            "DELETE FROM creature_template WHERE entry = @Entry",
-            new { Entry = entity.Identifier }
-        );
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> ExistsAsync(Identifier identifier)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlyCollection<CreatureTemplate>> GetAllAsync()
+    {
+        throw new NotImplementedException();
     }
 
     public Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)

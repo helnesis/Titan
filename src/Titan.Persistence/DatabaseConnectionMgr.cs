@@ -3,6 +3,11 @@ using Titan.Persistence.Factories.Base;
 
 namespace Titan.Persistence
 {
+    /// <summary>
+    /// Handle database connections.
+    /// </summary>
+    /// <param name="connectionFactory">Factory</param>
+    /// <param name="connectionInfo">Connection info</param>
     public sealed class DatabaseConnectionMgr(IDatabaseConnectionFactory connectionFactory, DatabaseConnectionInfo connectionInfo)
     {
         /// <summary>

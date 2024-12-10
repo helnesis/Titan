@@ -1,6 +1,9 @@
 ﻿namespace Titan.Persistence.Queries;
 
-internal class CreatureQueries
+/// <summary>
+/// Queries for <c>`creature_template`</c> table.
+/// </summary>
+internal sealed class CreatureQueries
 {
 
 }
