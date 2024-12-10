@@ -4,7 +4,7 @@ using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.Persistence.Repositories.Implementations;
 
-public sealed class CreatureRepository(MySqlDatabaseConnectionProvider databaseProvider) : ICreatureRepository
+public sealed class CreatureRepository(DatabaseProvider databaseProvider) : ICreatureRepository
 {
     public Task CreateAsync(CreatureTemplate entity)
     {

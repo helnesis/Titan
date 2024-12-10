@@ -1,4 +1,6 @@
-﻿using Titan.Domain.Entities.Base;
+﻿using Titan.Domain.Builders.Implementations.Titan;
+using Titan.Domain.Builders.Interfaces.Titan;
+using Titan.Domain.Entities.Base;
 
 namespace Titan.Domain.Entities.Titan;
 
@@ -37,5 +39,8 @@ public sealed record TitanPlayerCreation : Entity
     
     internal TitanPlayerCreation(Identifier identifier, Identifier creationId, CreationType creationType) : base(identifier)
         => (CreationId, CreationType) = (creationId, creationType);
+
+
+    public static ITitanPlayerCreationBuilder Builder => new TitanPlayerCreationBuilder();
 
 }
