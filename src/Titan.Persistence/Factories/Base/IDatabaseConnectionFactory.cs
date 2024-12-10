@@ -2,8 +2,8 @@
 
 namespace Titan.Persistence.Factories.Base
 {
-    public interface IDatabaseConnectionFactory
+    public interface IDatabaseConnectionFactory<out T> where T : IDbConnection 
     {
-        IDbConnection CreateConnection(string databaseConnectionInfo);
+        T CreateConnection(string databaseConnectionInfo);
     }
 }

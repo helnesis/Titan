@@ -1,12 +1,11 @@
 ﻿using MySqlConnector;
-using System.Data;
 using Titan.Persistence.Factories.Base;
 
 namespace Titan.Persistence.Factories;
 
-public sealed class MySqlDatabaseConnectionFactory : IDatabaseConnectionFactory
+public sealed class MySqlDatabaseConnectionFactory : IDatabaseConnectionFactory<MySqlConnection>
 {
-    public IDbConnection CreateConnection(string connectionString)
-        => new MySqlConnection(connectionString);
+    public MySqlConnection CreateConnection(string databaseConnectionInfo)
+        => new(databaseConnectionInfo);
 }
 
