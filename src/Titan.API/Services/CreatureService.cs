@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using MySqlConnector;
+using System.Data.Common;
+using Titan.API.Helpers;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Persistence.Repositories.Interfaces;
@@ -14,7 +15,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
             var creature = await creatureRepository.GetAsync(identifier);
             return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
         }
-        catch (MySqlException) {
+        catch (DbException) {
 
             return TypedResults.Problem(new ProblemBuilder()
                 .WithStatusCode(StatusCodes.Status500InternalServerError)
