@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Titan.API
+namespace Titan.API.Helpers
 {
     internal sealed class ProblemBuilder
     {
