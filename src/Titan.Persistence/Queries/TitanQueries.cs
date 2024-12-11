@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Titan.Persistence.Queries;
 
-namespace Titan.Persistence.Queries
+/// <summary>
+/// Queries for <c>`titan_api`</c> table.
+/// </summary>
+internal static class TitanQueries
 {
-    internal class TitanQueries
-    {
-    }
+
 }

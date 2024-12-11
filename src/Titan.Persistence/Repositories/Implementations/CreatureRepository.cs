@@ -1,14 +1,16 @@
-﻿using Titan.Domain.Entities;
+﻿using Dapper;
+using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.Persistence.Repositories.Implementations;
 
-public sealed class CreatureRepository(DatabaseProvider databaseProvider) : ICreatureRepository
+public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRepository
 {
-    public Task CreateAsync(CreatureTemplate entity)
+
+    public async Task CreateAsync(CreatureTemplate entity)
     {
-        throw new NotImplementedException();
+        await using var conn = provider.GetWorldDatabase();
     }
 
     public Task DeleteAsync(CreatureTemplate entity)
@@ -26,9 +28,15 @@ public sealed class CreatureRepository(DatabaseProvider databaseProvider) : ICre
         throw new NotImplementedException();
     }
 
-    public Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
+    public async Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
     {
-        throw new NotImplementedException();
+        await using var conn = provider.GetWorldDatabase();
+
+        // an exception should be trigger
+        await conn.ExecuteAsync("SELECT d FROM creature_template");
+
+        return null;
+
     }
 
     public Task UpdateAsync(CreatureTemplate entity)

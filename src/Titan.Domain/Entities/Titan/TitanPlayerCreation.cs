@@ -40,7 +40,5 @@ public sealed record TitanPlayerCreation : Entity
     internal TitanPlayerCreation(Identifier identifier, Identifier creationId, CreationType creationType) : base(identifier)
         => (CreationId, CreationType) = (creationId, creationType);
 
-
     public static ITitanPlayerCreationBuilder Builder => new TitanPlayerCreationBuilder();
-
 }

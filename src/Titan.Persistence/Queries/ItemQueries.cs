@@ -1,6 +1,6 @@
 ﻿namespace Titan.Persistence.Queries;
 
-internal class ItemQueries
+internal static class ItemQueries
 {
 
 }

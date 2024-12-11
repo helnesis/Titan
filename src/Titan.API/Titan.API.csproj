@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Titan.Domain\Titan.Domain.csproj" />
     <ProjectReference Include="..\Titan.Persistence\Titan.Persistence.csproj" />
+    <ProjectReference Include="..\Titan.Shared\Titan.Shared.csproj" />
   </ItemGroup>
 
 </Project>
