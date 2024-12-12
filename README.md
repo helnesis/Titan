@@ -28,9 +28,30 @@ Titan is built with .NET Core 9.0, in order to compile it and using it, you have
 git clone https://github.com/helnesis/TitanAPI.git
 ```
 
-2. Go to the project directory, builds the project through your favorite IDE or with
+2. Configure the service: copy `appsettings.example.json`, rename it to `appsettings.json`, and edit the settings to match your configuration.
 
-```sh
-dotnet build
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+
+  "Databases": {
+    
+    "AuthDatabase": "your_connection_string_for_authDB_here",
+
+    "CharacterDatabase": "your_connection_string_for_characterDB_here",
+
+    "WorldDatabase": "your_connection_string_for_worldDB_here",
+
+    "HotfixesDatabase":  "your_connection_string_for_hotfixesDB_here"
+  }
+}
+
 ```
 
+3. Builds the project.
