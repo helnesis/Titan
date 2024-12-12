@@ -1,13 +1,13 @@
-# Titan.API
+# Titan
 
-- [Titan.API](#titanapi)
+- [Titan](#titan)
   - [Overview](#overview)
   - [Features](#features)
   - [Requirements for deployment](#requirements-for-deployment)
   - [Build instructions](#build-instructions)
 
 ## Overview
-Titan API is a backend service designed to provide strong APIs for interacting with **TrinityCore**, the main goal is to provide
+Titan is a backend service designed to provide strong APIs for interacting with **TrinityCore**, the main goal is to provide
 tools and services that simplify managing game servers, players, and data. **It is still work-in-progress and a lot of features are missing.**
 
 
