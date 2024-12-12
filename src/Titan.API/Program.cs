@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
+using Serilog;
 using Titan.API.Exceptions;
 using Titan.API.Services;
 using Titan.Domain.Entities;
@@ -13,6 +14,7 @@ using Titan.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
+
 
 // Connection info 
 builder.Services.AddSingleton(new DatabaseConnectionInfo(
@@ -33,7 +35,16 @@ builder.Services.AddScoped<ICreatureRepository, CreatureRepository>();
 // API internal services
 builder.Services.AddScoped<CreatureService>();
 
+// Log
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger());
+
+
 var app = builder.Build();
+
+
 
 app.UseStatusCodePages(async statusCodeContext
     => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
@@ -53,9 +64,15 @@ if (!Utilities.IsDebugMode)
         });
     });
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+}
 
 
-app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService) => await creatureService.GetCreature(identifier));
+
+app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
+    => await creatureService.GetCreature(identifier));
 
 
 app.Run();

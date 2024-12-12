@@ -4,10 +4,10 @@ using Titan.Persistence.Factories.Base;
 namespace Titan.Persistence
 {
     /// <summary>
-    /// Handle database connections.
+    /// Provides methods to retrieve connections to the various databases.
     /// </summary>
-    /// <param name="connectionFactory">Factory</param>
-    /// <param name="connectionInfo">Connection info</param>
+    /// <param name="connectionFactory">Database connection factory.</param>
+    /// <param name="connectionInfo">Database connection info.</param>
     public sealed class DatabaseProvider(IDatabaseConnectionFactory<MySqlConnection> connectionFactory, DatabaseConnectionInfo connectionInfo)
     {
         /// <summary>

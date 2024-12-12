@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
+using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.Persistence.Repositories.Implementations;
@@ -37,6 +38,11 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
 
         return null;
 
+    }
+
+    public Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocales()
+    {
+        throw new NotImplementedException();
     }
 
     public Task UpdateAsync(CreatureTemplate entity)

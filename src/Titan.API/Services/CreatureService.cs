@@ -8,13 +8,20 @@ namespace Titan.API.Services;
 public sealed class CreatureService(ICreatureRepository creatureRepository)
 {
     /// <summary>
-    /// Returns the creature with the given identifier.
+    /// Retrieves a creature by its unique identifier.
     /// </summary>
-    /// <param name="identifier">Identifier</param>
-    /// <returns>Creature</returns>
+    /// <param name="identifier">
+    /// The unique identifier of the creature to retrieve.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. 
+    /// The result contains either an <see cref="Ok{T}"/> result with the <see cref="CreatureTemplate"/> 
+    /// if found, or a <see cref="NotFound"/> result if the creature does not exist.
+    /// </returns>
     public async Task<Results<Ok<CreatureTemplate>, NotFound>> GetCreature(Identifier identifier)
     {
         var creature = await creatureRepository.GetAsync(identifier);
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
+
 }

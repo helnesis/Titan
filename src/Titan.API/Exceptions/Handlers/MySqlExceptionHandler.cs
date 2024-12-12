@@ -31,6 +31,8 @@ public sealed class MySqlExceptionHandler(Exception exception) : BaseExceptionHa
         var problemDetails = detailsBuilder
             .Build();
 
+        logger?.LogError("Exception thrown during request (path: {Path}, detail: {Detail})", problemDetails.Instance, problemDetails.Detail);
+
         await Results.Problem(problemDetails)
             .ExecuteAsync(context);
     }
