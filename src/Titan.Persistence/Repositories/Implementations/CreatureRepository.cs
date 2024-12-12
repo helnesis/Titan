@@ -32,7 +32,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
     {
         await using var conn = provider.GetWorldDatabase();
 
-        // an exception should be trigger
+        // test for exception middleware
         await conn.ExecuteAsync("SELECT d FROM creature_template");
 
         return null;

@@ -16,7 +16,7 @@ namespace Titan.API.Exceptions
         /// <returns>Exception handler</returns>
         public static IExceptionHandler CreateHandler(Exception? exception) => exception switch
         {
-            DbException _ => new DbExceptionHandler(exception),
+            DbException _ => new MySqlExceptionHandler(exception),
             
             _ => new DefaultExceptionHandler(DefaultException),
         };

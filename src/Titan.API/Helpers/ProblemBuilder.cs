@@ -38,12 +38,13 @@ namespace Titan.API.Helpers
             _details = details;
             return this;
         }
-
         public ProblemBuilder WithInstance(string instance)
         {
             _instance = instance;
             return this;
         }
+
+        public static ProblemBuilder Builder => new();
     }
 
 

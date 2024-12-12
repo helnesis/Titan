@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace Titan.API.Exceptions.Base;
+﻿namespace Titan.API.Exceptions.Base;
 
 public abstract class BaseExceptionHandler(Exception exception) : IExceptionHandler
 {

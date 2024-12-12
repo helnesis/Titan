@@ -1,5 +1,4 @@
 ﻿using MySqlConnector;
-using System.Data;
 using Titan.Persistence.Factories.Base;
 
 namespace Titan.Persistence.Factories;
