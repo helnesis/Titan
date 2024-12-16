@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using Serilog;
 using Titan.API.Exceptions;
@@ -15,6 +16,7 @@ using Titan.Shared;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 
+builder.Services.AddOpenApi();
 
 // Connection info 
 builder.Services.AddSingleton(new DatabaseConnectionInfo(
@@ -45,7 +47,6 @@ builder.Logging.AddSerilog(new LoggerConfiguration()
 var app = builder.Build();
 
 
-
 app.UseStatusCodePages(async statusCodeContext
     => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
                  .ExecuteAsync(statusCodeContext.HttpContext));
@@ -70,9 +71,8 @@ else
 }
 
 
-
+app.MapOpenApi();
 app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
     => await creatureService.GetCreatureByIdentifier(identifier));
-
 
 app.Run();

@@ -32,12 +32,27 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         throw new NotImplementedException();
     }
 
+    public Task<CreatureTemplateAddon> GetCreatureAddonAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync()
     {
         throw new NotImplementedException();
     }
 
     public Task<IReadOnlySet<CreatureTemplateModel>> GetCreatureModelsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CreatureTemplateOutfits> GetCreatureOutfitsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlySet<CreatureTemplateSpell>> GetCreatureSpellsAsync()
     {
         throw new NotImplementedException();
     }
