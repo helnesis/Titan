@@ -2,6 +2,8 @@ using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Entities;
 using Titan.Domain.Enums;
+using System;
+using System.Collections.Immutable;
 
 namespace Titan.Domain.Builders.Implementations.Creatures;
 
@@ -53,9 +55,9 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
         _identifier = identifier;
         return this;
     }
-    public ICreatureTemplateBuilder WithKillCredits(IReadOnlyCollection<uint> killCredits)
+    public ICreatureTemplateBuilder WithKillCredits(params ReadOnlySpan<uint> killCredits)
     {
-        _killCredits = killCredits;
+        _killCredits = killCredits.Length > 2 ? killCredits[..2].ToImmutableArray() : killCredits.ToImmutableArray();
         return this;
     }
 

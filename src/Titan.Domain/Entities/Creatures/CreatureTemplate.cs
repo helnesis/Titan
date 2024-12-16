@@ -1,11 +1,13 @@
-﻿using Titan.Domain.Entities.Base;
+﻿using Titan.Domain.Builders.Implementations.Creatures;
+using Titan.Domain.Builders.Interfaces.Creatures;
+using Titan.Domain.Entities.Base;
 using Titan.Domain.Enums;
 
 namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureTemplate : Entity
 {
-    public IReadOnlyCollection<uint> KillCredits = new uint[2];
+    public IReadOnlyCollection<uint> KillCredits { get; init; }
     public string MaleName { get; init; }
     public string FemaleName { get; init; }
     public string MaleSubName { get; init; }
@@ -165,4 +167,6 @@ public sealed record CreatureTemplate : Entity
     scriptName,
     stringId
 );
+
+    public static ICreatureTemplateBuilder Builder => new CreatureTemplateBuilder();
 }

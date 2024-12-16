@@ -1,10 +1,12 @@
+using Titan.Domain.Builders.Base;
+using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Enums;
 
 namespace Titan.Domain.Builders.Interfaces.Creatures;
 
-public interface ICreatureTemplateBuilder
+public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
 {
-    ICreatureTemplateBuilder WithKillCredits(IReadOnlyCollection<uint> killCredits);
+    ICreatureTemplateBuilder WithKillCredits(params ReadOnlySpan<uint> killCredits);
     ICreatureTemplateBuilder WithMaleName(string maleName);
     ICreatureTemplateBuilder WithFemaleName(string femaleName);
     ICreatureTemplateBuilder WithMaleSubName(string maleSubName);

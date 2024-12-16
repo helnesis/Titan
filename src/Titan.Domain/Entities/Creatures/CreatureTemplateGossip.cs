@@ -1,4 +1,10 @@
-﻿namespace Titan.Domain.Entities.Creatures;
+﻿using Titan.Domain.Entities.Base;
 
-public sealed record CreatureTemplateGossip(
-    );
+namespace Titan.Domain.Entities.Creatures;
+
+public sealed record CreatureTemplateGossip : Entity
+{
+    public uint MenuId { get; init; }
+    internal CreatureTemplateGossip(Identifier identifier, uint menuId) : base(identifier)
+        => MenuId = menuId;
+}
