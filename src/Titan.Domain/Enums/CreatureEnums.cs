@@ -247,7 +247,7 @@ public enum CreatureFamily : ushort
 }
 
 [Flags]
-public enum ExtraFlags : uint
+public enum CreatureExtraFlags : uint
 {
     InstanceBind = 1 << 0,
     
