@@ -72,7 +72,7 @@ else
 
 
 app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
-    => await creatureService.GetCreature(identifier));
+    => await creatureService.GetCreatureByIdentifier(identifier));
 
 
 app.Run();

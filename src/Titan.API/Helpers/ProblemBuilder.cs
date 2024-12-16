@@ -5,8 +5,11 @@ namespace Titan.API.Helpers
     internal sealed class ProblemBuilder
     {
         private int _status;
+        
         private string? _title;
+        
         private string? _details;
+        
         private string? _instance;
 
         public ProblemDetails Build()

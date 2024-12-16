@@ -1,5 +1,4 @@
-﻿using Dapper;
-using Titan.Domain.Entities;
+﻿using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Interfaces;
@@ -8,10 +7,9 @@ namespace Titan.Persistence.Repositories.Implementations;
 
 public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRepository
 {
-
-    public async Task CreateAsync(CreatureTemplate entity)
+    public Task CreateAsync(CreatureTemplate entity)
     {
-        await using var conn = provider.GetWorldDatabase();
+        throw new NotImplementedException();
     }
 
     public Task DeleteAsync(CreatureTemplate entity)
@@ -29,18 +27,17 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         throw new NotImplementedException();
     }
 
-    public async Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
+    public Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
     {
-        await using var conn = provider.GetWorldDatabase();
-
-        // test for exception middleware
-        await conn.ExecuteAsync("SELECT d FROM creature_template");
-
-        return null;
-
+        throw new NotImplementedException();
     }
 
-    public Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocales()
+    public Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IReadOnlySet<CreatureTemplateModel>> GetCreatureModelsAsync()
     {
         throw new NotImplementedException();
     }

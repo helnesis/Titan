@@ -18,7 +18,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     /// The result contains either an <see cref="Ok{T}"/> result with the <see cref="CreatureTemplate"/> 
     /// if found, or a <see cref="NotFound"/> result if the creature does not exist.
     /// </returns>
-    public async Task<Results<Ok<CreatureTemplate>, NotFound>> GetCreature(Identifier identifier)
+    public async Task<Results<Ok<CreatureTemplate>, NotFound>> GetCreatureByIdentifier(Identifier identifier)
     {
         var creature = await creatureRepository.GetAsync(identifier);
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
