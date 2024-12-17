@@ -24,4 +24,20 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
 
+    /// <summary>
+    /// Retrieves all creatures.
+    /// </summary>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The result contains either an <see cref="Ok{T}"/> result with a collection of <see cref="CreatureTemplate"/>
+    /// if found, or a <see cref="NotFound"/> result if no creatures exist.
+    /// </returns>
+
+    public async Task<Results<Ok<IReadOnlyCollection<CreatureTemplate>>, NotFound>> GetAllCreatures()
+    {
+        var creatures = await creatureRepository.GetAllAsync();
+
+        return creatures is null ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+    }
+
 }
