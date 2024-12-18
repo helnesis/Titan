@@ -26,8 +26,8 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithDamageSchool(sbyte damageSchool);
     ICreatureTemplateBuilder WithBaseAttackTime(uint baseAttackTime);
     ICreatureTemplateBuilder WithRangeAttackTime(uint rangeAttackTime);
-    ICreatureTemplateBuilder WithBaseVariance(uint baseVariance);
-    ICreatureTemplateBuilder WithRangeVariance(uint rangeVariance);
+    ICreatureTemplateBuilder WithBaseVariance(float baseVariance);
+    ICreatureTemplateBuilder WithRangeVariance(float rangeVariance);
     ICreatureTemplateBuilder WithUnitClass(byte unitClass);
     ICreatureTemplateBuilder WithUnitFlags(CreatureUnitFlags unitFlags);
     ICreatureTemplateBuilder WithUnitFlags2(CreatureUnitFlags2 unitFlags2);

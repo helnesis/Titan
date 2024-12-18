@@ -27,8 +27,8 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
     private sbyte _damageSchool;
     private uint _baseAttackTime;
     private uint _rangeAttackTime;
-    private uint _baseVariance;
-    private uint _rangeVariance;
+    private float _baseVariance;
+    private float _rangeVariance;
     private byte _unitClass;
     private CreatureUnitFlags _unitFlags;
     private CreatureUnitFlags2 _unitFlags2;
@@ -157,13 +157,13 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
         return this;
     }
 
-    public ICreatureTemplateBuilder WithBaseVariance(uint baseVariance)
+    public ICreatureTemplateBuilder WithBaseVariance(float baseVariance)
     {
         _baseVariance = baseVariance;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithRangeVariance(uint rangeVariance)
+    public ICreatureTemplateBuilder WithRangeVariance(float rangeVariance)
     {
         _rangeVariance = rangeVariance;
         return this;

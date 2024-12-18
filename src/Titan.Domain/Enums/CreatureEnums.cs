@@ -73,7 +73,7 @@ public enum CreatureInhabitType : byte
     Rooted
 }
 
-public enum CreatureFamily : ushort
+public enum CreatureFamily : int
 {
     None = 0,
 
@@ -569,7 +569,7 @@ public enum CreatureFlags : ulong
 }
 
 [Flags]
-public enum CreatureUnitFlags : ulong
+public enum CreatureUnitFlags : uint
 {
     ServerControlled = 1 << 0,
     

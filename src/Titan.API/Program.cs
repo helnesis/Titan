@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using Serilog;
+using System.Text.Json;
 using Titan.API.Exceptions;
+using Titan.API.Helpers;
 using Titan.API.Services;
 using Titan.Domain.Entities;
 using Titan.Persistence;
@@ -44,7 +46,15 @@ builder.Logging.AddSerilog(new LoggerConfiguration()
     .CreateLogger());
 
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new IdentifierJsonConverter());
+    options.SerializerOptions.WriteIndented = true;
+});
+
+
 var app = builder.Build();
+
 
 
 app.UseStatusCodePages(async statusCodeContext
@@ -72,7 +82,12 @@ else
 
 
 app.MapOpenApi();
+
 app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
     => await creatureService.GetCreatureByIdentifier(identifier));
+
+app.MapGet("/creatures", async ([FromServices] CreatureService creatureService)
+    => await creatureService.GetAllCreatures());
+
 
 app.Run();

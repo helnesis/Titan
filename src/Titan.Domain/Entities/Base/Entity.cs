@@ -1,3 +1,5 @@
-﻿namespace Titan.Domain.Entities.Base;
+﻿using System.Text.Json.Serialization;
 
-public abstract record Entity(Identifier Identifier) : IEntity;
+namespace Titan.Domain.Entities.Base;
+
+public abstract record Entity([property: JsonPropertyOrder(-1)] Identifier Identifier) : IEntity;

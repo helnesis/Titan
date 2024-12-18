@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Immutable;
 using System.Data;
 using Titan.Domain.Entities;
@@ -29,23 +30,23 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
 
     public async Task<IReadOnlyCollection<CreatureTemplate>> GetAllAsync()
     {
-
-        await using var connection = provider.GetWorldDatabase();        
+        await using var connection = provider.GetWorldDatabase();
         await using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetAll);
 
         var creatures = new List<CreatureTemplate>();
-        int index = 0;
 
-        while(await reader.ReadAsync())
+        while (await reader.ReadAsync())
         {
+            int index = 0;
+
             creatures.Add(CreatureTemplate.Builder
                 .WithIdentifier(reader.GetUInt32(index++))
                 .WithKillCredits(reader.GetUInt32(index++), reader.GetUInt32(index++))
-                .WithMaleName(reader.GetString(index++) ?? "")
-                .WithFemaleName(reader.GetString(index++) ?? "")
-                .WithMaleSubName(reader.GetString(index++) ?? "")
-                .WithFemaleSubName(reader.GetString(index++) ?? "")
-                .WithIconName(reader.GetString(index++) ?? "")
+                .WithMaleName(reader.GetStringOrDefault(index++))
+                .WithFemaleName(reader.GetStringOrDefault(index++))
+                .WithMaleSubName(reader.GetStringOrDefault(index++))
+                .WithFemaleSubName(reader.GetStringOrDefault(index++))
+                .WithIconName(reader.GetStringOrDefault(index++))
                 .WithRequiredExpansion(reader.GetInt32(index++))
                 .WithVignetteId(reader.GetInt32(index++))
                 .WithFaction(reader.GetUInt16(index++))
@@ -57,8 +58,8 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
                 .WithDamageSchool(reader.GetInt8(index++))
                 .WithBaseAttackTime(reader.GetUInt32(index++))
                 .WithRangeAttackTime(reader.GetUInt32(index++))
-                .WithBaseVariance(reader.GetUInt32(index++))
-                .WithRangeVariance(reader.GetUInt32(index++))
+                .WithBaseVariance(reader.GetFloat(index++))
+                .WithRangeVariance(reader.GetFloat(index++))
                 .WithUnitClass(reader.GetByte(index++))
                 .WithUnitFlags(reader.GetEnum<CreatureUnitFlags>(index++))
                 .WithUnitFlags2(reader.GetEnum<CreatureUnitFlags2>(index++))
@@ -67,7 +68,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
                 .WithTrainerClass(reader.GetByte(index++))
                 .WithType(reader.GetEnum<CreatureType>(index++))
                 .WithVehiculeEntry(reader.GetUInt32(index++))
-                .WithAiName(reader.GetString(index++) ?? "")
+                .WithAiName(reader.GetStringOrDefault(index++))
                 .WithMovementType(reader.GetEnum<CreatureMovement>(index++))
                 .WithExperienceModifier(reader.GetFloat(index++))
                 .WithRacialLeader(reader.GetByte(index++))
@@ -77,17 +78,70 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
                 .WithRegenHealth(reader.GetByte(index++))
                 .WithCreatureImmunitiesId(reader.GetInt32(index++))
                 .WithExtraFlags(reader.GetEnum<CreatureExtraFlags>(index++))
-                .WithScriptName(reader.GetString(index++) ?? "")
-                .WithStringId(reader.GetString(index++) ?? "")
+                .WithScriptName(reader.GetStringOrDefault(index++))
+                .WithStringId(reader.GetStringOrDefault(index++))
                 .Build());
         }
 
         return [.. creatures];
     }
 
-    public Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
+    public async Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)
     {
-        throw new NotImplementedException();
+        await using var connection = provider.GetWorldDatabase();
+        using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetById, new { Entry = entityIdentifier.Value });
+
+        CreatureTemplate? creature = null;
+        int index = 0;
+
+        while (await reader.ReadAsync())
+        {
+            creature = CreatureTemplate.Builder
+              .WithIdentifier(reader.GetUInt32(index++))
+              .WithKillCredits(reader.GetUInt32(index++), reader.GetUInt32(index++))
+              .WithMaleName(reader.GetStringOrDefault(index++))
+              .WithFemaleName(reader.GetStringOrDefault(index++))
+              .WithMaleSubName(reader.GetStringOrDefault(index++))
+              .WithFemaleSubName(reader.GetStringOrDefault(index++))
+              .WithIconName(reader.GetStringOrDefault(index++))
+              .WithRequiredExpansion(reader.GetInt32(index++))
+              .WithVignetteId(reader.GetInt32(index++))
+              .WithFaction(reader.GetUInt16(index++))
+              .WithFlags(reader.GetEnum<CreatureFlags>(index++))
+              .WithSpeedWalk(reader.GetFloat(index++))
+              .WithSpeedRun(reader.GetFloat(index++))
+              .WithScale(reader.GetFloat(index++))
+              .WithClassification(reader.GetByte(index++))
+              .WithDamageSchool(reader.GetInt8(index++))
+              .WithBaseAttackTime(reader.GetUInt32(index++))
+              .WithRangeAttackTime(reader.GetUInt32(index++))
+              .WithBaseVariance(reader.GetFloat(index++))
+              .WithRangeVariance(reader.GetFloat(index++))
+              .WithUnitClass(reader.GetByte(index++))
+              .WithUnitFlags(reader.GetEnum<CreatureUnitFlags>(index++))
+              .WithUnitFlags2(reader.GetEnum<CreatureUnitFlags2>(index++))
+              .WithUnitFlags3(reader.GetEnum<CreatureUnitFlags3>(index++))
+              .WithFamily(reader.GetEnum<CreatureFamily>(index++))
+              .WithTrainerClass(reader.GetByte(index++))
+              .WithType(reader.GetEnum<CreatureType>(index++))
+              .WithVehiculeEntry(reader.GetUInt32(index++))
+              .WithAiName(reader.GetStringOrDefault(index++))
+              .WithMovementType(reader.GetEnum<CreatureMovement>(index++))
+              .WithExperienceModifier(reader.GetFloat(index++))
+              .WithRacialLeader(reader.GetByte(index++))
+              .WithMovementId(reader.GetUInt32(index++))
+              .WithWidgetSetId(reader.GetInt32(index++))
+              .WithWidgetSetUnitConditionId(reader.GetInt32(index++))
+              .WithRegenHealth(reader.GetByte(index++))
+              .WithCreatureImmunitiesId(reader.GetInt32(index++))
+              .WithExtraFlags(reader.GetEnum<CreatureExtraFlags>(index++))
+              .WithScriptName(reader.GetStringOrDefault(index++))
+              .WithStringId(reader.GetStringOrDefault(index++))
+              .Build();
+        }
+
+        return creature;
+
     }
 
     public Task<CreatureTemplateAddon> GetCreatureAddonAsync()

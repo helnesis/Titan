@@ -29,5 +29,7 @@ namespace Titan.Persistence
         /// Returns a connection to the auth database.
         /// </summary>
         public MySqlConnection GetAuthDatabase() => connectionFactory.CreateConnection(connectionInfo.AuthDatabase);
+
+
     }
 }

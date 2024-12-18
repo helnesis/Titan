@@ -24,8 +24,8 @@ public sealed record CreatureTemplate : Entity
     public sbyte DamageSchool { get; init; }
     public uint BaseAttackTime { get; init; }
     public uint RangeAttackTime { get; init; }
-    public uint BaseVariance { get; init; }
-    public uint RangeVariance { get; init; }
+    public float BaseVariance { get; init; }
+    public float RangeVariance { get; init; }
     public byte UnitClass { get; init; }
     public CreatureUnitFlags UnitFlags { get; init; }
     public CreatureUnitFlags2 UnitFlags2 { get; init; }
@@ -65,8 +65,8 @@ public sealed record CreatureTemplate : Entity
     sbyte damageSchool,
     uint baseAttackTime,
     uint rangeAttackTime,
-    uint baseVariance,
-    uint rangeVariance,
+    float baseVariance,
+    float rangeVariance,
     byte unitClass,
     CreatureUnitFlags unitFlags,
     CreatureUnitFlags2 unitFlags2,

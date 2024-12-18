@@ -11,6 +11,8 @@ internal static class DbExtensions
         => reader.GetFieldValue<ushort>(ordinal);
     public static sbyte GetInt8(this DbDataReader reader, int ordinal)
         => reader.GetFieldValue<sbyte>(ordinal);
+    public static string GetStringOrDefault(this DbDataReader reader, int ordinal)
+        => reader.IsDBNull(ordinal) ? string.Empty : reader.GetString(ordinal);
     public static T GetEnum<T>(this DbDataReader reader, int ordinal) where T : Enum
         => reader.GetFieldValue<T>(ordinal);
 }
