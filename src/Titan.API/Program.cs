@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using Serilog;
-using System.Text.Json;
+using Titan.API.Converters;
 using Titan.API.Exceptions;
-using Titan.API.Helpers;
 using Titan.API.Services;
 using Titan.Domain.Entities;
+using Titan.Domain.Enums;
 using Titan.Persistence;
 using Titan.Persistence.Factories;
 using Titan.Persistence.Factories.Base;
@@ -89,5 +88,7 @@ app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices
 app.MapGet("/creatures", async ([FromServices] CreatureService creatureService)
     => await creatureService.GetAllCreatures());
 
+app.MapGet("/creature/", async ([FromQuery(Name = "name")] string name,[FromServices] CreatureService creatureService)
+    => await creatureService.GetCreatureByName(name));
 
 app.Run();

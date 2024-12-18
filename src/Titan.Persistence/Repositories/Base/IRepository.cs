@@ -24,6 +24,7 @@ namespace Titan.Persistence.Repositories.Base
         /// <returns>A collection of entities</returns>
         Task<IReadOnlyCollection<T>> GetAllAsync();
 
+
         /// <summary>
         /// Updates an entity in the database.
         /// </summary>

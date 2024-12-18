@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
+using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.API.Services;
@@ -37,7 +38,24 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     {
         var creatures = await creatureRepository.GetAllAsync();
 
-        return creatures is null ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+        return creatures.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+    }
+
+
+    /// <summary>
+    /// Retrieves a creature by its name.
+    /// </summary>
+    /// <param name="filter">Creature name</param>
+    /// <param name="locale">Locale</param>
+    /// <returns>A task that represents the asynchronous operation.
+    /// The result contains either an <see cref="Ok{T}"/> result with a collection of <see cref="CreatureTemplate"/>
+    /// if found, or a <see cref="NotFound"/> result if no creatures exist.
+    /// </returns>
+    public async Task<Results<Ok<IReadOnlyCollection<CreatureTemplate>>, NotFound>> GetCreatureByName(string filter, Locale locale = Locale.enGB)
+    {
+        var creatures = await creatureRepository.GetByName(filter);
+
+        return creatures.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(creatures);
     }
 
 }

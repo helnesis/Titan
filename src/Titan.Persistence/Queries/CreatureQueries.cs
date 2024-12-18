@@ -28,7 +28,7 @@ internal static class CreatureQueries
     /// <summary>
     /// Get creature by name.
     /// </summary>
-    public const string GetNyName = $"{GetAll} WHERE ct.name = @Name";
+    public const string GetByName = $"{GetAll} WHERE ct.name REGEXP @Name OR ct.femaleName REGEXP @Name ORDER BY ct.name";
 
 
 

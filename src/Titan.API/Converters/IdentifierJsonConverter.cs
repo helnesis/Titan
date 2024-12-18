@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using Titan.Domain.Entities;
 
-namespace Titan.API.Helpers
+namespace Titan.API.Converters
 {
     public class IdentifierJsonConverter : JsonConverter<Identifier>
     {

@@ -50,5 +50,14 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// The task result contains creature's outfits.
     /// </returns>
     Task<CreatureTemplateOutfits> GetCreatureOutfitsAsync();
+
+
+
+    /// <summary>
+    /// Retrieves all creatures from the database that match the provided filter.
+    /// </summary>
+    /// <param name="filter">Creature name</param>
+    /// <returns>A collection of creatures</returns>
+    Task<IReadOnlyCollection<CreatureTemplate>> GetByName(string filter);
 }
 
