@@ -52,7 +52,6 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     Task<CreatureTemplateOutfits> GetCreatureOutfitsAsync();
 
 
-
     /// <summary>
     /// Retrieves all creatures from the database that match the provided filter.
     /// </summary>

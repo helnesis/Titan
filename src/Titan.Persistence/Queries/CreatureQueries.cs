@@ -24,17 +24,42 @@ internal static class CreatureQueries
                                         ct.WidgetSetId, ct.WidgetSetUnitConditionID, ct.RegenHealth, ct.CreatureImmunitiesId, ct.flags_extra,
                                         ct.ScriptName, ct.StringId FROM creature_template ct
                                  """;
-
     /// <summary>
     /// Get creature by name.
     /// </summary>
     public const string GetByName = $"{GetAll} WHERE ct.name REGEXP @Name OR ct.femaleName REGEXP @Name ORDER BY ct.name";
-
-
 
     /// <summary>
     /// Get creature by entry.
     /// </summary>
     public const string GetById = $"{GetAll} WHERE ct.entry = @Entry";
 
+    /// <summary>
+    /// Get creature locales.
+    /// </summary>
+    public const string GetLocales = "SELECT cl.entry, cl.locale, cl.Name, cl.NameAlt, cl.Title, cl.TitleAlt WHERE entry = @Entry";
+
+    /// <summary>
+    /// Get creature models.
+    /// </summary>
+    public const string GetModels = "SELECT cm.CreatureId, cm.Idx, cm.CreatureDisplayId, cm.DisplayScale, cm.Probability FROM creature_template_model cm WHERE cm.CreatureId = @Entry";
+
+    /// <summary>
+    /// Get creature spells
+    /// </summary>
+    public const string GetSpells = "SELECT cs.CreatureId, cs.Index, cs.Spell FROM creature_template_spell WHERE cs.CreatureId = @Entry";
+
+    /// <summary>
+    /// Get creature sparrings.
+    /// </summary>
+    public const string GetSparring = "SELECT csp.CreatureId, csp.NoNPCDamageBelowHealthPct FROM creature_sparring csp WHERE csp.CreatureId = @Entry";
+
+    /// <summary>
+    /// Get creature addons.
+    /// </summary>
+    public const string GetAddon = """
+                                   SELECT ca.entry, ca.PathId, ca.mount, ca.MountCreatureID, ca.StandState, ca.AnimTier, ca.VisFlags
+                                          ca.SheathState, ca.PvPFlags, ca.emote, ca.aiAnimKit, ca.movementAnimKit, ca.meleeAnimKit,
+                                          ca.visibilityDistanceType, ca.auras FROM creature_template_addon ca WHERE ca.entry = @Entry
+                                   """;
 }
