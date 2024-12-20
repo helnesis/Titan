@@ -26,6 +26,23 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     }
 
     /// <summary>
+    /// Retrieves a creature by its unique identifier.
+    /// </summary>
+    /// <param name="identifier">
+    /// The unique identifier of the creature to retrieve.
+    /// </param>
+    /// <returns>
+    /// A task that represents the asynchronous operation. 
+    /// The result contains either an <see cref="Ok{T}"/> result with the <see cref="CreatureTemplate"/> 
+    /// if found, or a <see cref="NotFound"/> result if the creature does not exist.
+    /// </returns>
+    public async Task<Results<Ok<IReadOnlyDictionary<Locale, CreatureTemplateLocale>>, NotFound>> GetCreatureLocaleByIdentifier(Identifier identifier)
+    {
+        var creature = await creatureRepository.GetCreatureLocalesAsync(identifier);
+        return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
+    }
+
+    /// <summary>
     /// Retrieves all creatures.
     /// </summary>
     /// <returns>

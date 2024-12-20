@@ -22,6 +22,7 @@ public sealed class CreatureTemplateAddonBuilder : ICreatureTemplateAddonBuilder
     private byte _visibilityDistanceType;
     private string _auras = string.Empty;
 
+    public Identifier Identifier { get { return _identifier; } }
     public ICreatureTemplateAddonBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

@@ -13,6 +13,8 @@ public sealed class TitanPlayerCreationBuilder : ITitanPlayerCreationBuilder
     private CreationType _creationType;
     public TitanPlayerCreation Build()
         => new(_identifier, _creationIdentifier, _creationType);
+
+    public Identifier Identifier { get { return _identifier; } }
     public ITitanPlayerCreationBuilder WithCreationIdentifier(Identifier creationIdentifier)
     {
         _creationIdentifier = creationIdentifier;

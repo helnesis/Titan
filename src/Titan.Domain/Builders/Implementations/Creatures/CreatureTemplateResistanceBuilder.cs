@@ -11,6 +11,8 @@ public sealed class CreatureTemplateResistanceBuilder : ICreatureTemplateResista
     private SpellSchool _school;
     private short _resistance;
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateResistanceBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

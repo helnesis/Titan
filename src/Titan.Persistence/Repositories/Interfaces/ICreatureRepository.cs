@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Entities.Creatures;
+﻿using Titan.Domain.Entities;
+using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Base;
 
@@ -13,7 +14,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation. 
     /// The task result contains a dictionary where the key is the locale and the value is the corresponding localized creature information.
     /// </returns>
-    Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync();
+    Task<IReadOnlyDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync(Identifier creatureEntry);
 
     /// <summary>
     /// Retrieves models for creatures, including display identifier, display scale and other details.
@@ -22,7 +23,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation.
     /// The task result contains a set of creature models.
     /// </returns>
-    Task<IReadOnlySet<CreatureTemplateModel>> GetCreatureModelsAsync();
+    Task<IReadOnlyCollection<CreatureTemplateModel>> GetCreatureModelsAsync(Identifier creatureEntry);
 
     /// <summary>
     /// Retrieves creature spells, including spell identifier, spell indexes, and other details.
@@ -31,7 +32,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation.
     /// The task result contains a set of creature spells.
     /// </returns>
-    Task<IReadOnlySet<CreatureTemplateSpell>> GetCreatureSpellsAsync();
+    Task<IReadOnlyCollection<CreatureTemplateSpell>> GetCreatureSpellsAsync(Identifier creatureEntry);
 
     /// <summary>
     /// Retrieves creature addons, including auras, mounts, weapons and other details.
@@ -40,7 +41,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation.
     /// The task result contains creature's addons.
     /// </returns>
-    Task<CreatureTemplateAddon> GetCreatureAddonAsync();
+    Task<CreatureTemplateAddon?> GetCreatureAddonAsync(Identifier creatureEntry);
 
     /// <summary>
     /// Retrieves creature outfits, including armor and other details.
@@ -49,7 +50,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation.
     /// The task result contains creature's outfits.
     /// </returns>
-    Task<CreatureTemplateOutfits> GetCreatureOutfitsAsync();
+    Task<CreatureTemplateOutfits?> GetCreatureOutfitsAsync(Identifier creatureEntry);
 
 
     /// <summary>

@@ -21,6 +21,8 @@ public sealed class CreatureTemplateLocaleBuilder : ICreatureTemplateLocaleBuild
     public CreatureTemplateLocale Build()
         => new(_identifier, _locale, _maleName, _femaleName, _maleSubName, _femaleSubName);
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateLocaleBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

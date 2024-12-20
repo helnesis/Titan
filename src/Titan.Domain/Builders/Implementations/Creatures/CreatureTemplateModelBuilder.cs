@@ -12,6 +12,8 @@ public class CreatureTemplateModelBuilder : ICreatureTemplateModelBuilder
     private float _displayScale;
     private float _probability;
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateModelBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

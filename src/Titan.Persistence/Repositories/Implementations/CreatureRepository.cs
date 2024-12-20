@@ -1,7 +1,5 @@
 ﻿using Dapper;
-using System;
-using System.Collections.Immutable;
-using System.Data;
+using System.Collections.Frozen;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Enums;
@@ -203,27 +201,110 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
     }
 
 
-    public Task<CreatureTemplateAddon> GetCreatureAddonAsync()
+    public async Task<CreatureTemplateAddon?> GetCreatureAddonAsync(Identifier creatureEntry)
     {
-        throw new NotImplementedException();
+        await using var connection = provider.GetWorldDatabase();
+        using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetAddon, new { Entry = creatureEntry });
+
+        CreatureTemplateAddon? addon = null;
+        int index = 0;
+
+        while(await reader.ReadAsync()) 
+        {
+            addon = CreatureTemplateAddon.Builder
+                .WithIdentifier(reader.GetUInt32(index++))
+                .WithPathId(reader.GetUInt32(index++))
+                .WithMount(reader.GetUInt32(index++))
+                .WithMountCreatureId(reader.GetUInt32(index++))
+                .WithStandState(reader.GetByte(index++))
+                .WithAnimTier(reader.GetByte(index++))
+                .WithVisibilityFlags(reader.GetByte(index++))
+                .WithSheathState(reader.GetByte(index++))
+                .WithPvPFlags(reader.GetByte(index++))
+                .WithEmote(reader.GetUInt32(index++))
+                .WithAiAnimKit(reader.GetInt16(index++))
+                .WithMovementAnimKit(reader.GetInt16(index++))
+                .WithVisibilityDistanceType(reader.GetByte(index++))
+                .WithAuras(reader.GetStringOrDefault(index++))
+                .Build();
+        }
+
+        return addon;
     }
 
-    public Task<IDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync()
+    public async Task<IReadOnlyDictionary<Locale, CreatureTemplateLocale>> GetCreatureLocalesAsync(Identifier creatureEntry)
     {
-        throw new NotImplementedException();
+        const byte MinLocale = 0;
+        const byte MaxLocale = 14;
+
+        await using var connection = provider.GetWorldDatabase();
+        using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetLocales, new { Entry = creatureEntry.Value });
+
+        var dictionary = new Dictionary<Locale, CreatureTemplateLocale>();
+        
+        while(await reader.ReadAsync())
+        {
+            for (int i = MinLocale; i < MaxLocale; i++) 
+            {
+                _ = Enum.TryParse(reader.GetStringOrDefault(1), out Locale locale);
+
+                dictionary.TryAdd(locale, CreatureTemplateLocale.Builder
+                    .WithIdentifier(reader.GetUInt32(0))
+                    .WithLocale(locale)
+                    .WithMaleName(reader.GetStringOrDefault(2))
+                    .WithFemaleName(reader.GetStringOrDefault(3))
+                    .WithMaleSubName(reader.GetStringOrDefault(4))
+                    .WithFemaleSubName(reader.GetStringOrDefault(5))
+                    .Build());
+            }
+        }
+
+        return dictionary.ToFrozenDictionary();
     }
 
-    public Task<IReadOnlySet<CreatureTemplateModel>> GetCreatureModelsAsync()
+    public async Task<IReadOnlyCollection<CreatureTemplateModel>> GetCreatureModelsAsync(Identifier creatureEntry)
     {
-        throw new NotImplementedException();
+        await using var connection = provider.GetWorldDatabase();
+        using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetModels, new { Entry = creatureEntry.Value });
+
+        List<CreatureTemplateModel> models = [];
+
+        while (await reader.ReadAsync())
+        {
+            int index = 0;
+
+            models.Add(CreatureTemplateModel.Builder
+                .WithIdentifier(reader.GetUInt32(index++))
+                .WithIndex(reader.GetUInt32(index++))
+                .WithDisplayId(reader.GetUInt32(index++))
+                .WithDisplayScale(reader.GetFloat(index++))
+                .WithProbability(reader.GetFloat(index++))
+                .Build());
+        }
+
+        return [.. models];
     }
 
-    public Task<CreatureTemplateOutfits> GetCreatureOutfitsAsync()
+    public async Task<CreatureTemplateOutfits?> GetCreatureOutfitsAsync(Identifier creatureEntry)
     {
-        throw new NotImplementedException();
+        await using var connection = provider.GetWorldDatabase();
+        using var reader = await connection.ExecuteReaderAsync(CreatureQueries.GetOutfits, new { Entry = creatureEntry.Value });
+
+        CreatureTemplateOutfits? outfits = null;
+        int index = 0;
+
+        while(await reader.ReadAsync())
+        {
+            outfits = CreatureTemplateOutfits.Builder
+                  
+                 .Build();
+        }
+
+        return outfits;
+
     }
 
-    public Task<IReadOnlySet<CreatureTemplateSpell>> GetCreatureSpellsAsync()
+    public Task<IReadOnlyCollection<CreatureTemplateSpell>> GetCreatureSpellsAsync(Identifier creatureEntry)
     {
         throw new NotImplementedException();
     }

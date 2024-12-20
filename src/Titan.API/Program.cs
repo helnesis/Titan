@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Serilog;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
 using Titan.API.Converters;
 using Titan.API.Exceptions;
 using Titan.API.Services;
@@ -54,12 +58,14 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
+/*
 app.UseCors(c =>
 {
     c.AllowAnyOrigin();
     c.AllowAnyMethod();
     c.AllowAnyHeader();
 });
+*/
 
 
 app.UseStatusCodePages(async statusCodeContext
@@ -96,5 +102,8 @@ app.MapGet("/creatures", async ([FromServices] CreatureService creatureService)
 
 app.MapGet("/creature/", async ([FromQuery(Name = "name")] string name,[FromServices] CreatureService creatureService)
     => await creatureService.GetCreatureByName(name));
+
+app.MapGet("/creaturelocale/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
+    => await creatureService.GetCreatureLocaleByIdentifier(identifier));
 
 app.Run();

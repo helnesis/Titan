@@ -37,22 +37,36 @@ internal static class CreatureQueries
     /// <summary>
     /// Get creature locales.
     /// </summary>
-    public const string GetLocales = "SELECT cl.entry, cl.locale, cl.Name, cl.NameAlt, cl.Title, cl.TitleAlt WHERE entry = @Entry";
+    public const string GetLocales = "SELECT cl.entry, cl.locale, cl.Name, cl.NameAlt, cl.Title, cl.TitleAlt FROM creature_template_locale cl WHERE entry = @Entry";
 
+    
     /// <summary>
     /// Get creature models.
     /// </summary>
     public const string GetModels = "SELECT cm.CreatureId, cm.Idx, cm.CreatureDisplayId, cm.DisplayScale, cm.Probability FROM creature_template_model cm WHERE cm.CreatureId = @Entry";
 
+    
     /// <summary>
     /// Get creature spells
     /// </summary>
     public const string GetSpells = "SELECT cs.CreatureId, cs.Index, cs.Spell FROM creature_template_spell WHERE cs.CreatureId = @Entry";
 
+    
     /// <summary>
     /// Get creature sparrings.
     /// </summary>
     public const string GetSparring = "SELECT csp.CreatureId, csp.NoNPCDamageBelowHealthPct FROM creature_sparring csp WHERE csp.CreatureId = @Entry";
+
+
+    /// <summary>
+    /// Get creature outfits
+    /// </summary>
+    public const string GetOutfits = """
+                                     SELECT co.entry, co.npcsoundsid, co.race, co.class, co.gender, co.spellvisualkitid, co.customizations, co.head, co.head_appearance,
+                                            co.shoulders, co.shoulders_appearance, co.body, co.body_appearance, co.chest, co.chest_appearance, co.waist, co.waist_appearance,
+                                            co.legs, co.legs_appearance, co.feet, co.feet_appearance, co.wrists, co.wrists_appearance, co.hands, co.hands_appearance, co.back,
+                                            co.back-appearance, co.tabard, co.tabard_appearance, co.guildid, co.description FROM creature_template_outfits co WHERE co.entry = @Entry
+                                     """;
 
     /// <summary>
     /// Get creature addons.

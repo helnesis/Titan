@@ -14,7 +14,9 @@ public sealed class CreatureTemplateSpellBuilder : ICreatureTemplateSpellBuilder
 
     public CreatureTemplateSpell Build()
         => new(_creatureEntry, _index, _spellEntry);
-    
+
+    public Identifier Identifier { get { return _creatureEntry; } }
+
     public ICreatureTemplateSpellBuilder WithCreatureEntry(Identifier creatureEntry)
     {
         _creatureEntry = creatureEntry;

@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Entities.Base;
+﻿using Titan.Domain.Builders.Interfaces.Creatures;
+using Titan.Domain.Entities.Base;
 
 namespace Titan.Domain.Entities.Creatures;
 
@@ -11,4 +12,7 @@ public sealed record CreatureTemplateModel : Entity
 
     internal CreatureTemplateModel(Identifier identifier, uint idx, uint displayId, float displayScale, float probability) : base(identifier)
         => (Index, DisplayId, DisplayScale, Probability) = (idx, displayId, displayScale, probability);
+
+
+    public static ICreatureTemplateModelBuilder Builder => new CreatureTemplateModelBuilder();
 }

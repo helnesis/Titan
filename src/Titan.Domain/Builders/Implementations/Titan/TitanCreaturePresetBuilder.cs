@@ -16,6 +16,8 @@ public sealed class TitanCreaturePresetBuilder : ITitanCreaturePresetBuilder
     public TitanCreaturePreset Build()
         => new(_identifier, _presetName, _presetData);
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ITitanCreaturePresetBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

@@ -8,6 +8,8 @@ public sealed class CreatureTemplateGossipBuilder : ICreatureTemplateGossipBuild
 {
     private Identifier _identifier;
     private uint _menuId;
+
+    public Identifier Identifier { get { return _identifier; } }
     public CreatureTemplateGossip Build()
         => new(_identifier, _menuId);
     public ICreatureTemplateGossipBuilder WithIdentifier(Identifier identifier)

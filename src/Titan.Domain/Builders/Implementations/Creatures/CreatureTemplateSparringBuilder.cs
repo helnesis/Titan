@@ -12,6 +12,8 @@ public sealed class CreatureTemplateSparringBuilder : ICreatureTemplateSparringB
     public CreatureTemplateSparring Build()
         => new(_creatureEntry, _noNpcDamageBelowHealthPct);
 
+    public Identifier Identifier { get { return _creatureEntry; } }
+
     public ICreatureTemplateSparringBuilder WithCreatureEntry(Identifier creatureEntry)
     {
         _creatureEntry = creatureEntry;

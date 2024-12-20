@@ -14,20 +14,32 @@ public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
     private byte _gender;
     private int _spellVisualKitId;
     private string _customizations = string.Empty;
-    private long _head;
-    private long _shoulders;
-    private long _body;
-    private long _chest;
-    private long _waist;
-    private long _legs;
-    private long _feet;
-    private long _wrists;
-    private long _hands;
-    private long _back;
-    private long _tabard;
+    private uint _head;
+    private uint _shoulders;
+    private uint _body;
+    private uint _chest;
+    private uint _waist;
+    private uint _legs;
+    private uint _feet;
+    private uint _wrists;
+    private uint _hands;
+    private uint _back;
+    private uint _tabard;
+    private long _headAppearance;
+    private long _shouldersAppearance;
+    private long _bodyAppearance;
+    private long _chestAppearance;
+    private long _waistAppearance;
+    private long _legsAppearance;
+    private long _feetAppearance;
+    private long _wristsAppearance;
+    private long _handsAppearance;
+    private long _backAppearance;
+    private long _tabardAppearance;
     private ulong _guildId;
     private string _description = string.Empty;
 
+    public Identifier Identifier { get { return _identifier; } }
     public ICreatureTemplateOutfitsBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;
@@ -76,69 +88,135 @@ public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHead(long head)
+    public ICreatureTemplateOutfitsBuilder WithHead(uint head)
     {
         _head = head;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithShoulders(long shoulders)
+    public ICreatureTemplateOutfitsBuilder WithShoulders(uint shoulders)
     {
         _shoulders = shoulders;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBody(long body)
+    public ICreatureTemplateOutfitsBuilder WithBody(uint body)
     {
         _body = body;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithChest(long chest)
+    public ICreatureTemplateOutfitsBuilder WithChest(uint chest)
     {
         _chest = chest;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWaist(long waist)
+    public ICreatureTemplateOutfitsBuilder WithWaist(uint waist)
     {
         _waist = waist;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithLegs(long legs)
+    public ICreatureTemplateOutfitsBuilder WithLegs(uint legs)
     {
         _legs = legs;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithFeet(long feet)
+    public ICreatureTemplateOutfitsBuilder WithFeet(uint feet)
     {
         _feet = feet;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWrists(long wrists)
+    public ICreatureTemplateOutfitsBuilder WithWrists(uint wrists)
     {
         _wrists = wrists;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHands(long hands)
+    public ICreatureTemplateOutfitsBuilder WithHands(uint hands)
     {
         _hands = hands;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBack(long back)
+    public ICreatureTemplateOutfitsBuilder WithBack(uint back)
     {
         _back = back;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithTabard(long tabard)
+    public ICreatureTemplateOutfitsBuilder WithTabard(uint tabard)
     {
         _tabard = tabard;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithHeadAppearance(long headAppearance)
+    {
+        _headAppearance = headAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithShouldersAppearance(long shouldersAppearance)
+    {
+        _shouldersAppearance = shouldersAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithBodyAppearance(long bodyAppearance)
+    {
+        _bodyAppearance = bodyAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithChestAppearance(long chestAppearance)
+    {
+        _chestAppearance = chestAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithWaistAppearance(long waistAppearance)
+    {
+        _waistAppearance = waistAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithLegsAppearance(long legsAppearance)
+    {
+        _legsAppearance = legsAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithFeetAppearance(long feetAppearance)
+    {
+        _feetAppearance = feetAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithWristsAppearance(long wristsAppearance)
+    {
+        _wristsAppearance = wristsAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithHandsAppearance(long handsAppearance)
+    {
+        _handsAppearance = handsAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithBackAppearance(long backAppearance)
+    {
+        _backAppearance = backAppearance;
+        return this;
+    }
+
+    public ICreatureTemplateOutfitsBuilder WithTabardAppearance(long tabardAppearance)
+    {
+        _tabardAppearance = tabardAppearance;
         return this;
     }
 
@@ -176,6 +254,17 @@ public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
             _hands,
             _back,
             _tabard,
+            _headAppearance,
+            _shouldersAppearance,
+            _bodyAppearance,
+            _chestAppearance,
+            _waistAppearance,
+            _legsAppearance,
+            _feetAppearance,
+            _wristsAppearance,
+            _handsAppearance,
+            _backAppearance,
+            _tabardAppearance,
             _guildId,
             _description
         );

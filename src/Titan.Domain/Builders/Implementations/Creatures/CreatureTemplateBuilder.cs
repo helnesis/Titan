@@ -50,6 +50,8 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
     private string _scriptName = string.Empty;
     private string _stringId = string.Empty;
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

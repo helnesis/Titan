@@ -12,6 +12,8 @@ public sealed class CreatureTemplateMovementBuilder : ICreatureTemplateMovementB
     private byte _random;
     private uint _interactionPauseTimer;
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateMovementBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;

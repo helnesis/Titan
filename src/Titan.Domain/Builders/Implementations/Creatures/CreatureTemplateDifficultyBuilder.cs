@@ -33,6 +33,8 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
     private uint _staticFlags7;
     private uint _staticFlags8;
 
+    public Identifier Identifier { get { return _identifier; } }
+
     public ICreatureTemplateDifficultyBuilder WithIdentifier(Identifier identifier)
     {
         _identifier = identifier;
