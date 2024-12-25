@@ -4,7 +4,7 @@ using Titan.Domain.Entities;
 
 namespace Titan.Domain.Builders.Implementations.Creatures;
 
-public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
+public sealed class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
 {
     private Identifier _identifier;
     private uint _entry;
@@ -220,7 +220,7 @@ public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithGuildId(ulong guildId)
+    public ICreatureTemplateOutfitsBuilder WithGuildId(uint guildId)
     {
         _guildId = guildId;
         return this;
@@ -269,4 +269,4 @@ public class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBuilder
             _description
         );
     }
-}
+} 
