@@ -8,7 +8,6 @@ namespace Titan.Domain.Builders.Interfaces.Creatures;
 public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
 {
     ICreatureTemplateBuilder WithIdentifier(Identifier identifier);
-
     ICreatureTemplateBuilder WithKillCredits(params ReadOnlySpan<uint> killCredits);
     ICreatureTemplateBuilder WithMaleName(string maleName);
     ICreatureTemplateBuilder WithFemaleName(string femaleName);
@@ -18,7 +17,7 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithRequiredExpansion(int requiredExpansion);
     ICreatureTemplateBuilder WithVignetteId(int vignetteId);
     ICreatureTemplateBuilder WithFaction(ushort faction);
-    ICreatureTemplateBuilder WithFlags(CreatureFlags flags);
+    ICreatureTemplateBuilder WithFlags(CreatureTemplateFlags flags);
     ICreatureTemplateBuilder WithSpeedWalk(float speedWalk);
     ICreatureTemplateBuilder WithSpeedRun(float speedRun);
     ICreatureTemplateBuilder WithScale(float scale);
@@ -29,9 +28,6 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithBaseVariance(float baseVariance);
     ICreatureTemplateBuilder WithRangeVariance(float rangeVariance);
     ICreatureTemplateBuilder WithUnitClass(byte unitClass);
-    ICreatureTemplateBuilder WithUnitFlags(CreatureUnitFlags unitFlags);
-    ICreatureTemplateBuilder WithUnitFlags2(CreatureUnitFlags2 unitFlags2);
-    ICreatureTemplateBuilder WithUnitFlags3(CreatureUnitFlags3 unitFlags3);
     ICreatureTemplateBuilder WithFamily(CreatureFamily family);
     ICreatureTemplateBuilder WithTrainerClass(byte trainerClass);
     ICreatureTemplateBuilder WithType(CreatureType type);
@@ -41,11 +37,18 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithExperienceModifier(float experienceModifier);
     ICreatureTemplateBuilder WithRacialLeader(byte racialLeader);
     ICreatureTemplateBuilder WithMovementId(uint movementId);
-    ICreatureTemplateBuilder WithWidgetSetId(int widgetWithId);
-    ICreatureTemplateBuilder WithWidgetSetUnitConditionId(int widgetWithUnitConditionId);
+    ICreatureTemplateBuilder WithWidgetSetId(int widgetSetId);
+    ICreatureTemplateBuilder WithWidgetSetUnitConditionId(int widgetSetUnitConditionId);
     ICreatureTemplateBuilder WithRegenHealth(byte regenHealth);
     ICreatureTemplateBuilder WithCreatureImmunitiesId(int creatureImmunitiesId);
-    ICreatureTemplateBuilder WithExtraFlags(CreatureExtraFlags extraFlags);
     ICreatureTemplateBuilder WithScriptName(string scriptName);
     ICreatureTemplateBuilder WithStringId(string stringId);
+    ICreatureTemplateBuilder WithAddon(CreatureTemplateAddon addon);
+    ICreatureTemplateBuilder WithGossips(IReadOnlyCollection<CreatureTemplateGossip> gossips);
+    ICreatureTemplateBuilder WithLocales(IReadOnlyDictionary<Locale, CreatureTemplateLocale> locales);
+    ICreatureTemplateBuilder WithModels(IReadOnlyCollection<CreatureTemplateModel> models);
+    ICreatureTemplateBuilder WithMovement(CreatureTemplateMovement movement);
+    ICreatureTemplateBuilder WithOutfits(CreatureTemplateOutfits outfits);
+    ICreatureTemplateBuilder WithSparring(CreatureTemplateSparring sparring);
+    ICreatureTemplateBuilder WithSpells(IReadOnlyCollection<CreatureTemplateSpell> spells);
 }
