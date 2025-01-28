@@ -6,6 +6,12 @@ namespace Titan.Persistence.Repositories.Base
     public interface IRepository<T> where T : Entity
     {
         /// <summary>
+        /// Generates a new identifier for an entity.
+        /// </summary>
+        /// <returns>Free identifier</returns>
+        Task<Identifier> NextIdentifier();
+        
+        /// <summary>
         /// Inserts a new entity into the database.
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -23,7 +29,6 @@ namespace Titan.Persistence.Repositories.Base
         /// </summary>
         /// <returns>A collection of entities</returns>
         Task<IReadOnlyCollection<T>> GetAllAsync();
-
 
         /// <summary>
         /// Updates an entity in the database.

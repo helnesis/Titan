@@ -5,6 +5,7 @@ using Serilog;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using Titan.API.Converters;
 using Titan.API.Exceptions;
@@ -55,9 +56,16 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.WriteIndented = true;
 });
 
+builder.Services.AddMemoryCache();
+
+builder.Services.AddResponseCompression(options =>
+{
+  options.EnableForHttps = true;
+});
 
 var app = builder.Build();
 
+app.UseResponseCompression();
 /*
 app.UseCors(c =>
 {
@@ -94,16 +102,16 @@ else
 
 app.MapOpenApi();
 
-app.MapGet("/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
+app.MapGet("/api/creature/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
     => await creatureService.GetCreatureByIdentifier(identifier));
 
-app.MapGet("/creatures", async ([FromServices] CreatureService creatureService)
+app.MapGet("/api/creatures", async ([FromServices] CreatureService creatureService)
     => await creatureService.GetAllCreatures());
 
-app.MapGet("/creature/", async ([FromQuery(Name = "name")] string name,[FromServices] CreatureService creatureService)
+app.MapGet("/api/creature/", async ([FromQuery(Name = "name")] string name,[FromServices] CreatureService creatureService)
     => await creatureService.GetCreatureByName(name));
 
-app.MapGet("/creaturelocale/{identifier}", async (Identifier identifier, [FromServices] CreatureService creatureService)
-    => await creatureService.GetCreatureLocaleByIdentifier(identifier));
+app.MapGet("/api/creature/list", async ([FromQuery(Name = "locale")] Locale locale, [FromServices] CreatureService creatureService)
+    => await creatureService.GetCreatureList(locale));
 
 app.Run();

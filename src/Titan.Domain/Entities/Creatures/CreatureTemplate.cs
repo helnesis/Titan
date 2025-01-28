@@ -7,12 +7,12 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureTemplate : Entity
 {
-    public IReadOnlyCollection<uint> KillCredits { get; init; }
-    public string MaleName { get; init; }
-    public string FemaleName { get; init; }
-    public string MaleSubName { get; init; }
-    public string FemaleSubName { get; init; }
-    public string IconName { get; init; }
+    public IReadOnlyCollection<uint>? KillCredits { get; init; }
+    public string? MaleName { get; init; }
+    public string? FemaleName { get; init; }
+    public string? MaleSubName { get; init; }
+    public string? FemaleSubName { get; init; }
+    public string? IconName { get; init; }
     public int RequiredExpansion { get; init; }
     public int VignetteId { get; init; }
     public ushort Faction { get; init; }
@@ -30,7 +30,7 @@ public sealed record CreatureTemplate : Entity
     public byte TrainerClass { get; init; }
     public CreatureType Type { get; init; }
     public uint VehiculeEntry { get; init; }
-    public string AiName { get; init; }
+    public string? AiName { get; init; }
     public CreatureMovement MovementType { get; init; }
     public float ExperienceModifier { get; init; }
     public byte RacialLeader { get; init; }
@@ -39,30 +39,33 @@ public sealed record CreatureTemplate : Entity
     public int WidgetSetUnitConditionId { get; init; }
     public byte RegenHealth { get; init; }
     public int CreatureImmunitiesId { get; init; }
-    public string ScriptName { get; init; }
-    public string StringId { get; init; }
-    public CreatureTemplateAddon Addon { get; init; }
-    public CreatureTemplateMovement Movement { get; init; }
-    public CreatureTemplateOutfits Outfits { get; init; }
-    public CreatureTemplateSparring Sparring { get; init; }
-    public CreatureTemplateFlags Flags { get; init; }
-    public IReadOnlyCollection<CreatureTemplateGossip> Gossips { get; init; }
-    public IReadOnlyDictionary<Locale, CreatureTemplateLocale> Locales { get; init; }
-    public IReadOnlyCollection<CreatureTemplateModel> Models { get; init; }
-    public IReadOnlyCollection<CreatureTemplateSpell> Spells { get; init; }
+    public string? ScriptName { get; init; }
+    public string? StringId { get; init; }
+    public CreatureTemplateAddon? Addon { get; init; }
+    public CreatureTemplateMovement? Movement { get; init; }
+    public IReadOnlyCollection<CreatureTemplateOutfits>? Outfits { get; init; }
+    public IReadOnlyCollection<CreatureTemplateSparring>? Sparrings { get; init; }
+    public CreatureTemplateFlags? Flags { get; init; }
+    public IReadOnlyCollection<CreatureTemplateGossip>? Gossips { get; init; }
+    public IReadOnlyDictionary<Locale, CreatureTemplateLocale>? Locales { get; init; }
+    public IReadOnlyCollection<CreatureTemplateModel>? Models { get; init; }
+    public IReadOnlyCollection<CreatureTemplateSpell>? Spells { get; init; }
+    public IReadOnlyCollection<CreatureEquipTemplate>? Equipments { get; init; }
+    public IReadOnlyCollection<CreatureTemplateDifficulty>? Difficulties { get; init; }
+    public IReadOnlyCollection<CreatureTemplateResistance>? Resistances { get; init; }
 
     internal CreatureTemplate(
         Identifier identifier,
-        IReadOnlyCollection<uint> killCredits,
-        string maleName,
-        string femaleName,
-        string maleSubName,
-        string femaleSubName,
-        string iconName,
+        IReadOnlyCollection<uint>? killCredits,
+        string? maleName,
+        string? femaleName,
+        string? maleSubName,
+        string? femaleSubName,
+        string? iconName,
         int requiredExpansion,
         int vignetteId,
         ushort faction,
-        CreatureTemplateFlags flags,
+        CreatureTemplateFlags? flags,
         float speedWalk,
         float speedRun,
         float scale,
@@ -77,7 +80,7 @@ public sealed record CreatureTemplate : Entity
         byte trainerClass,
         CreatureType type,
         uint vehicleEntry,
-        string aiName,
+        string? aiName,
         CreatureMovement movementType,
         float experienceModifier,
         byte racialLeader,
@@ -86,17 +89,19 @@ public sealed record CreatureTemplate : Entity
         int widgetSetUnitConditionId,
         byte regenHealth,
         int creatureImmunitiesId,
-        string scriptName,
-        string stringId,
-        CreatureTemplateAddon addon,
-        IReadOnlyCollection<CreatureTemplateGossip> gossips,
-        IReadOnlyDictionary<Locale, CreatureTemplateLocale> locales,
-        IReadOnlyCollection<CreatureTemplateModel> models,
-        CreatureTemplateMovement movement,
-        CreatureTemplateOutfits outfits,
-        CreatureTemplateSparring sparring,
-        IReadOnlyCollection<CreatureTemplateSpell> spells
-    ) : base(identifier) => (
+        string? scriptName,
+        string? stringId,
+        CreatureTemplateAddon? addon,
+        IReadOnlyCollection<CreatureTemplateGossip>? gossips,
+        IReadOnlyDictionary<Locale, CreatureTemplateLocale>? locales,
+        IReadOnlyCollection<CreatureTemplateModel>? models,
+        CreatureTemplateMovement? movement,
+        IReadOnlyCollection<CreatureTemplateOutfits>? outfits,
+        IReadOnlyCollection<CreatureTemplateSparring>? sparrings,
+        IReadOnlyCollection<CreatureTemplateSpell>? spells,
+        IReadOnlyCollection<CreatureEquipTemplate>? equipments,
+        IReadOnlyCollection<CreatureTemplateDifficulty>? difficulties,
+        IReadOnlyCollection<CreatureTemplateResistance>? resistances) : base(identifier) => (
         KillCredits,
         MaleName,
         FemaleName,
@@ -138,8 +143,11 @@ public sealed record CreatureTemplate : Entity
         Models,
         Movement,
         Outfits,
-        Sparring,
-        Spells
+        Sparrings,
+        Spells,
+        Equipments,
+        Difficulties,
+        Resistances
     ) = (
         killCredits,
         maleName,
@@ -182,8 +190,11 @@ public sealed record CreatureTemplate : Entity
         models,
         movement,
         outfits,
-        sparring,
-        spells
+        sparrings,
+        spells,
+        equipments,
+        difficulties,
+        resistances
     );
     public static ICreatureTemplateBuilder Builder => new CreatureTemplateBuilder();
 }

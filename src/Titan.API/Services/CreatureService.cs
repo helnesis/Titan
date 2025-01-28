@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Extensions.Caching.Memory;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
+using Titan.Domain.Entities.Creatures.Lookup;
 using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Interfaces;
 
@@ -22,6 +24,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     public async Task<Results<Ok<CreatureTemplate>, NotFound>> GetCreatureByIdentifier(Identifier identifier)
     {
         var creature = await creatureRepository.GetAsync(identifier);
+        
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
 
@@ -39,7 +42,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     public async Task<Results<Ok<IReadOnlyDictionary<Locale, CreatureTemplateLocale>>, NotFound>> GetCreatureLocaleByIdentifier(Identifier identifier)
     {
         var creature = await creatureRepository.GetCreatureLocalesAsync(identifier);
-        return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
+        return creature is { Count: 0 }? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
 
     /// <summary>
@@ -55,7 +58,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     {
         var creatures = await creatureRepository.GetAllAsync();
 
-        return creatures.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+        return creatures is { Count: 0 } ? TypedResults.NotFound() : TypedResults.Ok(creatures);
     }
 
 
@@ -72,7 +75,22 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     {
         var creatures = await creatureRepository.GetByName(filter);
 
-        return creatures.Count == 0 ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+        return creatures is { Count: 0 } ? TypedResults.NotFound() : TypedResults.Ok(creatures);
+    }
+
+
+    /// <summary>
+    /// Retrieves a list of creatures, with their entry and name.
+    /// </summary>
+    /// <param name="locale">Locale</param>
+    /// <returns>A task that represents the asynchronous operation.
+    /// The result contains either an <see cref="Ok{T}"/> result with a collection of <see cref="CreatureLookup"/>
+    /// </returns>
+    public async Task<Results<Ok<IReadOnlyCollection<CreatureLookup>>, NotFound>> GetCreatureList(Locale locale = Locale.frFR)
+    {
+        var creatureList = await creatureRepository.GetCreaturesLookupAsync(locale);
+        
+        return creatureList is { Count: 0 } ? TypedResults.NotFound() : TypedResults.Ok(creatureList);
     }
 
 }

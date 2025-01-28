@@ -14,28 +14,28 @@ public sealed class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBui
     private byte _gender;
     private int _spellVisualKitId;
     private string _customizations = string.Empty;
-    private uint _head;
-    private uint _shoulders;
-    private uint _body;
-    private uint _chest;
-    private uint _waist;
-    private uint _legs;
-    private uint _feet;
-    private uint _wrists;
-    private uint _hands;
-    private uint _back;
-    private uint _tabard;
-    private long _headAppearance;
-    private long _shouldersAppearance;
-    private long _bodyAppearance;
-    private long _chestAppearance;
-    private long _waistAppearance;
-    private long _legsAppearance;
-    private long _feetAppearance;
-    private long _wristsAppearance;
-    private long _handsAppearance;
-    private long _backAppearance;
-    private long _tabardAppearance;
+    private long _head;
+    private long _shoulders;
+    private long _body;
+    private long _chest;
+    private long _waist;
+    private long _legs;
+    private long _feet;
+    private long _wrists;
+    private long _hands;
+    private long _back;
+    private long _tabard;
+    private uint _headAppearance;
+    private uint _shouldersAppearance;
+    private uint _bodyAppearance;
+    private uint _chestAppearance;
+    private uint _waistAppearance;
+    private uint _legsAppearance;
+    private uint _feetAppearance;
+    private uint _wristsAppearance;
+    private uint _handsAppearance;
+    private uint _backAppearance;
+    private uint _tabardAppearance;
     private ulong _guildId;
     private string _description = string.Empty;
 
@@ -88,139 +88,139 @@ public sealed class CreatureTemplateOutfitsBuilder : ICreatureTemplateOutfitsBui
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHead(uint head)
+    public ICreatureTemplateOutfitsBuilder WithHead(long head)
     {
         _head = head;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithShoulders(uint shoulders)
+    public ICreatureTemplateOutfitsBuilder WithShoulders(long shoulders)
     {
         _shoulders = shoulders;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBody(uint body)
+    public ICreatureTemplateOutfitsBuilder WithBody(long body)
     {
         _body = body;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithChest(uint chest)
+    public ICreatureTemplateOutfitsBuilder WithChest(long chest)
     {
         _chest = chest;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWaist(uint waist)
+    public ICreatureTemplateOutfitsBuilder WithWaist(long waist)
     {
         _waist = waist;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithLegs(uint legs)
+    public ICreatureTemplateOutfitsBuilder WithLegs(long legs)
     {
         _legs = legs;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithFeet(uint feet)
+    public ICreatureTemplateOutfitsBuilder WithFeet(long feet)
     {
         _feet = feet;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWrists(uint wrists)
+    public ICreatureTemplateOutfitsBuilder WithWrists(long wrists)
     {
         _wrists = wrists;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHands(uint hands)
+    public ICreatureTemplateOutfitsBuilder WithHands(long hands)
     {
         _hands = hands;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBack(uint back)
+    public ICreatureTemplateOutfitsBuilder WithBack(long back)
     {
         _back = back;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithTabard(uint tabard)
+    public ICreatureTemplateOutfitsBuilder WithTabard(long tabard)
     {
         _tabard = tabard;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHeadAppearance(long headAppearance)
+    public ICreatureTemplateOutfitsBuilder WithHeadAppearance(uint headAppearance)
     {
         _headAppearance = headAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithShouldersAppearance(long shouldersAppearance)
+    public ICreatureTemplateOutfitsBuilder WithShouldersAppearance(uint shouldersAppearance)
     {
         _shouldersAppearance = shouldersAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBodyAppearance(long bodyAppearance)
+    public ICreatureTemplateOutfitsBuilder WithBodyAppearance(uint bodyAppearance)
     {
         _bodyAppearance = bodyAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithChestAppearance(long chestAppearance)
+    public ICreatureTemplateOutfitsBuilder WithChestAppearance(uint chestAppearance)
     {
         _chestAppearance = chestAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWaistAppearance(long waistAppearance)
+    public ICreatureTemplateOutfitsBuilder WithWaistAppearance(uint waistAppearance)
     {
         _waistAppearance = waistAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithLegsAppearance(long legsAppearance)
+    public ICreatureTemplateOutfitsBuilder WithLegsAppearance(uint legsAppearance)
     {
         _legsAppearance = legsAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithFeetAppearance(long feetAppearance)
+    public ICreatureTemplateOutfitsBuilder WithFeetAppearance(uint feetAppearance)
     {
         _feetAppearance = feetAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithWristsAppearance(long wristsAppearance)
+    public ICreatureTemplateOutfitsBuilder WithWristsAppearance(uint wristsAppearance)
     {
         _wristsAppearance = wristsAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithHandsAppearance(long handsAppearance)
+    public ICreatureTemplateOutfitsBuilder WithHandsAppearance(uint handsAppearance)
     {
         _handsAppearance = handsAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithBackAppearance(long backAppearance)
+    public ICreatureTemplateOutfitsBuilder WithBackAppearance(uint backAppearance)
     {
         _backAppearance = backAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithTabardAppearance(long tabardAppearance)
+    public ICreatureTemplateOutfitsBuilder WithTabardAppearance(uint tabardAppearance)
     {
         _tabardAppearance = tabardAppearance;
         return this;
     }
 
-    public ICreatureTemplateOutfitsBuilder WithGuildId(uint guildId)
+    public ICreatureTemplateOutfitsBuilder WithGuildId(ulong guildId)
     {
         _guildId = guildId;
         return this;

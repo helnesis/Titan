@@ -13,31 +13,30 @@ public sealed record CreatureTemplateOutfits : Entity
     public byte Gender { get; init; }
     public int SpellVisualKitId { get; init; }
     public string Customizations { get; init; }
-    public uint Head { get; init; }
-    public uint Shoulders { get; init; }
-    public uint Body { get; init; }
-    public uint Chest { get; init; }
-    public uint Waist { get; init; }
-    public uint Legs { get; init; }
-    public uint Feet { get; init; }
-    public uint Wrists { get; init; }
-    public uint Hands { get; init; }
-    public uint Back { get; init; }
-    public uint Tabard { get; init; }
-    public long HeadAppearance { get; init; }
-    public long ShouldersAppearance { get; init; }
-    public long BodyAppearance { get; init; }
-    public long ChestAppearance { get; init; }
-    public long WaistAppearance { get; init; }
-    public long LegsAppearance { get; init; }
-    public long FeetAppearance { get; init; }
-    public long WristsAppearance { get; init; }
-    public long HandsAppearance { get; init; }
-    public long BackAppearance { get; init; }
-    public long TabardAppearance { get; init; }
+    public long Head { get; init; }
+    public long Shoulders { get; init; }
+    public long Body { get; init; }
+    public long Chest { get; init; }
+    public long Waist { get; init; }
+    public long Legs { get; init; }
+    public long Feet { get; init; }
+    public long Wrists { get; init; }
+    public long Hands { get; init; }
+    public long Back { get; init; }
+    public long Tabard { get; init; }
+    public uint HeadAppearance { get; init; }
+    public uint ShouldersAppearance { get; init; }
+    public uint BodyAppearance { get; init; }
+    public uint ChestAppearance { get; init; }
+    public uint WaistAppearance { get; init; }
+    public uint LegsAppearance { get; init; }
+    public uint FeetAppearance { get; init; }
+    public uint WristsAppearance { get; init; }
+    public uint HandsAppearance { get; init; }
+    public uint BackAppearance { get; init; }
+    public uint TabardAppearance { get; init; }
     public ulong GuildId { get; init; }
     public string Description { get; init; }
-
     internal CreatureTemplateOutfits(
         Identifier identifier,
         uint entry,
@@ -47,28 +46,28 @@ public sealed record CreatureTemplateOutfits : Entity
         byte gender,
         int spellVisualKitId,
         string customizations,
-        uint head,
-        uint shoulders,
-        uint body,
-        uint chest,
-        uint waist,
-        uint legs,
-        uint feet,
-        uint wrists,
-        uint hands,
-        uint back,
-        uint tabard,
-        long headAppearance,
-        long shouldersAppearance,
-        long bodyAppearance,
-        long chestAppearance,
-        long waistAppearance,
-        long legsAppearance,
-        long feetAppearance,
-        long wristsAppearance,
-        long handsAppearance,
-        long backAppearance,
-        long tabardAppearance,
+        long head,
+        long shoulders,
+        long body,
+        long chest,
+        long waist,
+        long legs,
+        long feet,
+        long wrists,
+        long hands,
+        long back,
+        long tabard,
+        uint headAppearance,
+        uint shouldersAppearance,
+        uint bodyAppearance,
+        uint chestAppearance,
+        uint waistAppearance,
+        uint legsAppearance,
+        uint feetAppearance,
+        uint wristsAppearance,
+        uint handsAppearance,
+        uint backAppearance,
+        uint tabardAppearance,
         ulong guildId,
         string description
     ) : base(identifier) => (

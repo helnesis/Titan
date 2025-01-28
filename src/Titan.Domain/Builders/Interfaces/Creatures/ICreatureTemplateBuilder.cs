@@ -17,7 +17,6 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithRequiredExpansion(int requiredExpansion);
     ICreatureTemplateBuilder WithVignetteId(int vignetteId);
     ICreatureTemplateBuilder WithFaction(ushort faction);
-    ICreatureTemplateBuilder WithFlags(CreatureTemplateFlags flags);
     ICreatureTemplateBuilder WithSpeedWalk(float speedWalk);
     ICreatureTemplateBuilder WithSpeedRun(float speedRun);
     ICreatureTemplateBuilder WithScale(float scale);
@@ -31,7 +30,7 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithFamily(CreatureFamily family);
     ICreatureTemplateBuilder WithTrainerClass(byte trainerClass);
     ICreatureTemplateBuilder WithType(CreatureType type);
-    ICreatureTemplateBuilder WithVehiculeEntry(uint vehiculeEntry);
+    ICreatureTemplateBuilder WithVehiculeEntry(uint vehicleEntry);
     ICreatureTemplateBuilder WithAiName(string aiName);
     ICreatureTemplateBuilder WithMovementType(CreatureMovement movementType);
     ICreatureTemplateBuilder WithExperienceModifier(float experienceModifier);
@@ -43,12 +42,16 @@ public interface ICreatureTemplateBuilder : IBuilder<CreatureTemplate>
     ICreatureTemplateBuilder WithCreatureImmunitiesId(int creatureImmunitiesId);
     ICreatureTemplateBuilder WithScriptName(string scriptName);
     ICreatureTemplateBuilder WithStringId(string stringId);
-    ICreatureTemplateBuilder WithAddon(CreatureTemplateAddon addon);
-    ICreatureTemplateBuilder WithGossips(IReadOnlyCollection<CreatureTemplateGossip> gossips);
-    ICreatureTemplateBuilder WithLocales(IReadOnlyDictionary<Locale, CreatureTemplateLocale> locales);
-    ICreatureTemplateBuilder WithModels(IReadOnlyCollection<CreatureTemplateModel> models);
-    ICreatureTemplateBuilder WithMovement(CreatureTemplateMovement movement);
-    ICreatureTemplateBuilder WithOutfits(CreatureTemplateOutfits outfits);
-    ICreatureTemplateBuilder WithSparring(CreatureTemplateSparring sparring);
-    ICreatureTemplateBuilder WithSpells(IReadOnlyCollection<CreatureTemplateSpell> spells);
+    ICreatureTemplateBuilder WithFlags(CreatureTemplateFlags? flags);
+    ICreatureTemplateBuilder WithAddon(CreatureTemplateAddon? addon);
+    ICreatureTemplateBuilder WithGossips(IReadOnlyCollection<CreatureTemplateGossip>? gossips);
+    ICreatureTemplateBuilder WithLocales(IReadOnlyDictionary<Locale, CreatureTemplateLocale>? locales);
+    ICreatureTemplateBuilder WithModels(IReadOnlyCollection<CreatureTemplateModel>? models);
+    ICreatureTemplateBuilder WithMovement(CreatureTemplateMovement? movement);
+    ICreatureTemplateBuilder WithOutfits(IReadOnlyCollection<CreatureTemplateOutfits>? outfits);
+    ICreatureTemplateBuilder WithSparrings(IReadOnlyCollection<CreatureTemplateSparring>? sparring);
+    ICreatureTemplateBuilder WithSpells(IReadOnlyCollection<CreatureTemplateSpell>? spells);
+    ICreatureTemplateBuilder WithEquipments(IReadOnlyCollection<CreatureEquipTemplate>? equipments);
+    ICreatureTemplateBuilder WithDifficulties(IReadOnlyCollection<CreatureTemplateDifficulty>? difficulties);
+    ICreatureTemplateBuilder WithResistances(IReadOnlyCollection<CreatureTemplateResistance>? resistances);
 }

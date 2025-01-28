@@ -1,3 +1,4 @@
+using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Enums;
 
 namespace Titan.Domain.Entities.Creatures;
@@ -19,4 +20,6 @@ public sealed record CreatureTemplateFlags
         CreatureUnitFlags2 unitFlags2, CreatureUnitFlags3 unitFlags3)
         => (ExtraFlags, CreatureFlags, UnitFlags, UnitFlags2, UnitFlags3) =
             (extraFlags, flags, unitFlags, unitFlags2, unitFlags3);
+    
+    public static ICreatureTemplateFlagsBuilder Builder => new CreatureTemplateFlagsBuilder();
 }

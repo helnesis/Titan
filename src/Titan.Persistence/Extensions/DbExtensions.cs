@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using System.Numerics;
 
 namespace Titan.Persistence.Extensions;
 internal static class DbExtensions
@@ -15,4 +16,7 @@ internal static class DbExtensions
         => reader.IsDBNull(ordinal) ? string.Empty : reader.GetString(ordinal);
     public static T GetEnum<T>(this DbDataReader reader, int ordinal) where T : Enum
         => reader.GetFieldValue<T>(ordinal);
+    public static T? GetNumberOrNull<T>(this DbDataReader reader, int ordinal) where T : struct, INumberBase<T>
+        => reader.IsDBNull(ordinal) ? default(T?) : reader.GetFieldValue<T>(ordinal);
+
 }

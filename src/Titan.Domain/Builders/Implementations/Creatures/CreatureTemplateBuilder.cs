@@ -8,17 +8,16 @@ namespace Titan.Domain.Builders.Implementations.Creatures;
 
 public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
 {
-    private Identifier _identifier;
-    private IReadOnlyCollection<uint> _killCredits;
-    private string _maleName;
-    private string _femaleName;
-    private string _maleSubName;
-    private string _femaleSubName;
-    private string _iconName;
+    private IReadOnlyCollection<uint>? _killCredits;
+    private string? _maleName;
+    private string? _femaleName;
+    private string? _maleSubName;
+    private string? _femaleSubName;
+    private string? _iconName;
     private int _requiredExpansion;
     private int _vignetteId;
     private ushort _faction;
-    private CreatureTemplateFlags _flags;
+    private CreatureTemplateFlags? _flags;
     private float _speedWalk;
     private float _speedRun;
     private float _scale;
@@ -32,8 +31,8 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
     private CreatureFamily _family;
     private byte _trainerClass;
     private CreatureType _type;
-    private uint _vehiculeEntry;
-    private string _aiName;
+    private uint _vehicleEntry;
+    private string? _aiName;
     private CreatureMovement _movementType;
     private float _experienceModifier;
     private byte _racialLeader;
@@ -42,21 +41,23 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
     private int _widgetSetUnitConditionId;
     private byte _regenHealth;
     private int _creatureImmunitiesId;
-    private string _scriptName;
-    private string _stringId;
-    private CreatureTemplateAddon _addon;
-    private IReadOnlyCollection<CreatureTemplateGossip> _gossips;
-    private IReadOnlyDictionary<Locale, CreatureTemplateLocale> _locales;
-    private IReadOnlyCollection<CreatureTemplateModel> _models;
-    private CreatureTemplateMovement _movement;
-    private CreatureTemplateOutfits _outfits;
-    private CreatureTemplateSparring _sparring;
-    private IReadOnlyCollection<CreatureTemplateSpell> _spells;
-
-    public Identifier Identifier { get { return _identifier; } }
+    private string? _scriptName;
+    private string? _stringId;
+    private CreatureTemplateAddon? _addon;
+    private CreatureTemplateMovement? _movement;
+    private IReadOnlyCollection<CreatureTemplateOutfits>? _outfits;
+    private IReadOnlyCollection<CreatureTemplateGossip>? _gossips;
+    private IReadOnlyDictionary<Locale, CreatureTemplateLocale>? _locales;
+    private IReadOnlyCollection<CreatureTemplateModel>? _models;
+    private IReadOnlyCollection<CreatureTemplateSparring>? _sparrings;
+    private IReadOnlyCollection<CreatureTemplateSpell>? _spells;
+    private IReadOnlyCollection<CreatureEquipTemplate>? _equipments;
+    private IReadOnlyCollection<CreatureTemplateDifficulty>? _difficulties;
+    private IReadOnlyCollection<CreatureTemplateResistance>? _resistances;
+    public Identifier Identifier { get; private set; }
     public ICreatureTemplateBuilder WithIdentifier(Identifier identifier)
     {
-        _identifier = identifier;
+        Identifier = identifier;
         return this;
     }
 
@@ -114,7 +115,7 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
         return this;
     }
 
-    public ICreatureTemplateBuilder WithFlags(CreatureTemplateFlags flags)
+    public ICreatureTemplateBuilder WithFlags(CreatureTemplateFlags? flags)
     {
         _flags = flags;
         return this;
@@ -198,9 +199,9 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
         return this;
     }
 
-    public ICreatureTemplateBuilder WithVehiculeEntry(uint vehiculeEntry)
+    public ICreatureTemplateBuilder WithVehiculeEntry(uint vehicleEntry)
     {
-        _vehiculeEntry = vehiculeEntry;
+        _vehicleEntry = vehicleEntry;
         return this;
     }
 
@@ -270,58 +271,76 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
         return this;
     }
 
-    public ICreatureTemplateBuilder WithAddon(CreatureTemplateAddon addon)
+    public ICreatureTemplateBuilder WithAddon(CreatureTemplateAddon? addon)
     {
         _addon = addon;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithGossips(IReadOnlyCollection<CreatureTemplateGossip> gossips)
+    public ICreatureTemplateBuilder WithGossips(IReadOnlyCollection<CreatureTemplateGossip>? gossips)
     {
         _gossips = gossips;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithLocales(IReadOnlyDictionary<Locale, CreatureTemplateLocale> locales)
+    public ICreatureTemplateBuilder WithLocales(IReadOnlyDictionary<Locale, CreatureTemplateLocale>? locales)
     {
         _locales = locales;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithModels(IReadOnlyCollection<CreatureTemplateModel> models)
+    public ICreatureTemplateBuilder WithModels(IReadOnlyCollection<CreatureTemplateModel>? models)
     {
         _models = models;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithMovement(CreatureTemplateMovement movement)
+    public ICreatureTemplateBuilder WithMovement(CreatureTemplateMovement? movement)
     {
         _movement = movement;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithOutfits(CreatureTemplateOutfits outfits)
+    public ICreatureTemplateBuilder WithOutfits(IReadOnlyCollection<CreatureTemplateOutfits>? outfits)
     {
         _outfits = outfits;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithSparring(CreatureTemplateSparring sparring)
+    public ICreatureTemplateBuilder WithSparrings(IReadOnlyCollection<CreatureTemplateSparring>? sparrings)
     {
-        _sparring = sparring;
+        _sparrings = sparrings;
         return this;
     }
 
-    public ICreatureTemplateBuilder WithSpells(IReadOnlyCollection<CreatureTemplateSpell> spells)
+    public ICreatureTemplateBuilder WithSpells(IReadOnlyCollection<CreatureTemplateSpell>? spells)
     {
         _spells = spells;
         return this;
     }
-    
+
+    public ICreatureTemplateBuilder WithEquipments(IReadOnlyCollection<CreatureEquipTemplate>? equipments)
+    {
+        _equipments = equipments;
+        return this;
+    }
+
+    public ICreatureTemplateBuilder WithDifficulties(IReadOnlyCollection<CreatureTemplateDifficulty>? difficulties)
+    {
+        _difficulties = difficulties;
+        return this;
+    }
+
+    public ICreatureTemplateBuilder WithResistances(IReadOnlyCollection<CreatureTemplateResistance>? resistances)
+    {
+        _resistances = resistances;
+        return this;
+    }
+
     public CreatureTemplate Build()
     {
         return new CreatureTemplate(
-            _identifier,
+            Identifier,
             _killCredits,
             _maleName,
             _femaleName,
@@ -345,7 +364,7 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
             _family,
             _trainerClass,
             _type,
-            _vehiculeEntry,
+            _vehicleEntry,
             _aiName,
             _movementType,
             _experienceModifier,
@@ -363,8 +382,11 @@ public sealed class CreatureTemplateBuilder : ICreatureTemplateBuilder
             _models,
             _movement,
             _outfits,
-            _sparring,
-            _spells
+            _sparrings,
+            _spells,
+            _equipments,
+            _difficulties,
+            _resistances
         );
     }
 }

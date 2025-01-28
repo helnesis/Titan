@@ -7,10 +7,10 @@ namespace Titan.Domain.Builders.Implementations.Creatures;
 public sealed class CreatureTemplateMovementBuilder : ICreatureTemplateMovementBuilder
 {
     private Identifier _identifier;
-    private byte _hoverInitiallyEnabled;
+    private byte? _hoverInitiallyEnabled;
     private byte _chase;
     private byte _random;
-    private uint _interactionPauseTimer;
+    private uint? _interactionPauseTimer;
 
     public Identifier Identifier { get { return _identifier; } }
 
@@ -20,7 +20,7 @@ public sealed class CreatureTemplateMovementBuilder : ICreatureTemplateMovementB
         return this;
     }
 
-    public ICreatureTemplateMovementBuilder WithHoverInitiallyEnabled(byte hoverInitiallyEnabled)
+    public ICreatureTemplateMovementBuilder WithHoverInitiallyEnabled(byte? hoverInitiallyEnabled)
     {
         _hoverInitiallyEnabled = hoverInitiallyEnabled;
         return this;
@@ -38,7 +38,7 @@ public sealed class CreatureTemplateMovementBuilder : ICreatureTemplateMovementB
         return this;
     }
 
-    public ICreatureTemplateMovementBuilder WithInteractionPauseTimer(uint interactionPauseTimer)
+    public ICreatureTemplateMovementBuilder WithInteractionPauseTimer(uint? interactionPauseTimer)
     {
         _interactionPauseTimer = interactionPauseTimer;
         return this;

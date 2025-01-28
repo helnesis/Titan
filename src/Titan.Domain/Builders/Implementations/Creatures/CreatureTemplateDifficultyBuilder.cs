@@ -6,22 +6,21 @@ namespace Titan.Domain.Builders.Implementations.Creatures;
 
 public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuilder
 {
-    private Identifier _identifier;
-    private byte _difficultyID;
+    private byte _difficultyId;
     private short _levelScalingDeltaMin;
     private short _levelScalingDeltaMax;
-    private int _contentTuningID;
+    private int _contentTuningId;
     private int _healthScalingExpansion;
     private float _healthModifier;
     private float _manaModifier;
     private float _armorModifier;
     private float _damageModifier;
-    private int _creatureDifficultyID;
+    private int _creatureDifficultyId;
     private uint _typeFlags;
     private uint _typeFlags2;
-    private uint _lootID;
-    private uint _pickPocketLootID;
-    private uint _skinLootID;
+    private uint _lootId;
+    private uint _pickPocketLootId;
+    private uint _skinLootId;
     private uint _goldMin;
     private uint _goldMax;
     private uint _staticFlags1;
@@ -32,18 +31,16 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
     private uint _staticFlags6;
     private uint _staticFlags7;
     private uint _staticFlags8;
-
-    public Identifier Identifier { get { return _identifier; } }
-
+    public Identifier Identifier { get; private set; }
     public ICreatureTemplateDifficultyBuilder WithIdentifier(Identifier identifier)
     {
-        _identifier = identifier;
+        Identifier = identifier;
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithDifficultyID(byte difficultyID)
+    public ICreatureTemplateDifficultyBuilder WithDifficultyID(byte difficultyId)
     {
-        _difficultyID = difficultyID;
+        _difficultyId = difficultyId;
         return this;
     }
 
@@ -59,9 +56,9 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithContentTuningID(int contentTuningID)
+    public ICreatureTemplateDifficultyBuilder WithContentTuningID(int contentTuningId)
     {
-        _contentTuningID = contentTuningID;
+        _contentTuningId = contentTuningId;
         return this;
     }
 
@@ -95,9 +92,9 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithCreatureDifficultyID(int creatureDifficultyID)
+    public ICreatureTemplateDifficultyBuilder WithCreatureDifficultyID(int creatureDifficultyId)
     {
-        _creatureDifficultyID = creatureDifficultyID;
+        _creatureDifficultyId = creatureDifficultyId;
         return this;
     }
 
@@ -113,21 +110,21 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithLootID(uint lootID)
+    public ICreatureTemplateDifficultyBuilder WithLootID(uint lootId)
     {
-        _lootID = lootID;
+        _lootId = lootId;
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithPickPocketLootID(uint pickPocketLootID)
+    public ICreatureTemplateDifficultyBuilder WithPickPocketLootID(uint pickPocketLootId)
     {
-        _pickPocketLootID = pickPocketLootID;
+        _pickPocketLootId = pickPocketLootId;
         return this;
     }
 
-    public ICreatureTemplateDifficultyBuilder WithSkinLootID(uint skinLootID)
+    public ICreatureTemplateDifficultyBuilder WithSkinLootID(uint skinLootId)
     {
-        _skinLootID = skinLootID;
+        _skinLootId = skinLootId;
         return this;
     }
 
@@ -194,22 +191,22 @@ public class CreatureTemplateDifficultyBuilder : ICreatureTemplateDifficultyBuil
     public CreatureTemplateDifficulty Build()
     {
         return new CreatureTemplateDifficulty(
-            _identifier,
-            _difficultyID,
+            Identifier,
+            _difficultyId,
             _levelScalingDeltaMin,
             _levelScalingDeltaMax,
-            _contentTuningID,
+            _contentTuningId,
             _healthScalingExpansion,
             _healthModifier,
             _manaModifier,
             _armorModifier,
             _damageModifier,
-            _creatureDifficultyID,
+            _creatureDifficultyId,
             _typeFlags,
             _typeFlags2,
-            _lootID,
-            _pickPocketLootID,
-            _skinLootID,
+            _lootId,
+            _pickPocketLootId,
+            _skinLootId,
             _goldMin,
             _goldMax,
             _staticFlags1,

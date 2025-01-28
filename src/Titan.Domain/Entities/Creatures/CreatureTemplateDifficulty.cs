@@ -1,4 +1,6 @@
-﻿using Titan.Domain.Entities.Base;
+﻿using Titan.Domain.Builders.Implementations.Creatures;
+using Titan.Domain.Builders.Interfaces.Creatures;
+using Titan.Domain.Entities.Base;
 
 namespace Titan.Domain.Entities.Creatures;
 
@@ -109,4 +111,6 @@ public sealed record CreatureTemplateDifficulty : Entity
         staticFlags7,
         staticFlags8
     );
+
+    public static ICreatureTemplateDifficultyBuilder Builder => new CreatureTemplateDifficultyBuilder();
 }
