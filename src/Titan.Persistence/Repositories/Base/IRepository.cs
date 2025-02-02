@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Entities;
+﻿using System.Data;
+using Titan.Domain.Entities;
 using Titan.Domain.Entities.Base;
 
 namespace Titan.Persistence.Repositories.Base
@@ -6,16 +7,10 @@ namespace Titan.Persistence.Repositories.Base
     public interface IRepository<T> where T : Entity
     {
         /// <summary>
-        /// Generates a new identifier for an entity.
-        /// </summary>
-        /// <returns>Free identifier</returns>
-        Task<Identifier> NextIdentifier();
-        
-        /// <summary>
         /// Inserts a new entity into the database.
         /// </summary>
         /// <param name="entity">Entity</param>
-        Task CreateAsync(T entity);
+        Task<T?> CreateAsync(T entity);
 
         /// <summary>
         /// Retrieves an entity from the database.

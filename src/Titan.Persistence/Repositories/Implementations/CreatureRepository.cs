@@ -4,6 +4,9 @@ using System.Collections.Immutable;
 using System.Data;
 using System.Diagnostics;
 using System.IO.Pipelines;
+using System.Security.Cryptography;
+using System.Transactions;
+using MySqlConnector;
 using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities;
@@ -16,17 +19,228 @@ using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.Persistence.Repositories.Implementations;
 
+
 public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRepository
 {
-    public async Task<Identifier> NextIdentifier()
+    private static readonly Identifier MinOutfitIdentifier = Identifier.Create(3000000000);
+    private static readonly Identifier MinCreatureIdentifier = Identifier.Create(500000);
+    
+    private static async Task<Identifier> NextIdentifier(MySqlConnection connection, MySqlTransaction? transaction = null)
+    {
+        var identifier = await connection.ExecuteScalarAsync<uint>(CreatureQueries.GetNextIdentifier, transaction: transaction);
+        return identifier < MinCreatureIdentifier.Value ? MinCreatureIdentifier : new Identifier(identifier);
+    }
+    
+    
+    public async Task<CreatureTemplate?> CreateAsync(CreatureTemplate entity)
     {
         await using var connection = provider.GetWorldDatabase();
-        return new Identifier(await connection.ExecuteScalarAsync<uint>(CreatureQueries.GetNextIdentifier));
+
+        if (connection.State != ConnectionState.Open)
+            await connection.OpenAsync(); // BeginTransaction does not open the connection...
+        
+        await using var transaction = await connection.BeginTransactionAsync();
+        
+        var creatureEntry = await NextIdentifier(connection, transaction);
+
+        try
+        {
+            var parameters = new
+            {
+                Entry = creatureEntry.Value,
+                KillCredit1 = entity.KillCredits?.Count > 0 ? entity.KillCredits.ElementAt(0) : 0,
+                KillCredit2 = entity.KillCredits?.Count > 1 ? entity.KillCredits.ElementAt(1) : 0,
+                entity.MaleName,
+                entity.FemaleName,
+                entity.MaleSubName,
+                entity.FemaleSubName,
+                entity.IconName,
+                entity.RequiredExpansion,
+                entity.VignetteId,
+                entity.Faction,
+                entity.SpeedWalk,
+                entity.SpeedRun,
+                entity.Scale,
+                entity.Classification,
+                DmgSchool = entity.DamageSchool,
+                entity.BaseAttackTime,
+                entity.RangeAttackTime,
+                entity.BaseVariance,
+                entity.RangeVariance,
+                entity.UnitClass,
+                entity.Family,
+                NpcFlag = entity.Flags?.CreatureFlags ?? 0,
+                UnitFlags = entity.Flags?.UnitFlags ?? 0,
+                UnitFlags2 = entity.Flags?.UnitFlags2 ?? 0,
+                UnitFlags3 = entity.Flags?.UnitFlags3 ?? 0,
+                FlagsExtra = entity.Flags?.ExtraFlags ?? 0,
+                entity.TrainerClass,
+                entity.Type,
+                VehicleId = entity.VehicleEntry,
+                entity.AiName,
+                entity.MovementType,
+                entity.ExperienceModifier,
+                entity.RacialLeader,
+                entity.MovementId,
+                entity.WidgetSetId,
+                entity.WidgetSetUnitConditionId,
+                entity.RegenHealth,
+                entity.CreatureImmunitiesId,
+                entity.ScriptName,
+                entity.StringId
+            };
+
+
+            await connection.ExecuteAsync(CreatureQueries.InsertOrUpdate, parameters, transaction);
+            
+            if (entity.Addon is not null)
+                await InsertAddon(creatureEntry, entity.Addon, connection, transaction);
+            
+            if (entity.Equipments is not null && entity.Equipments.Count > 0)
+                await InsertEquipment(creatureEntry, entity.Equipments, connection, transaction);
+            
+            if (entity.Models is not null && entity.Models.Count > 0)
+                await InsertAppearance(creatureEntry, entity.Models, connection, transaction, entity.Outfits);
+            
+            await transaction.CommitAsync();
+            
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine($"Erreur lors de la création de la créature {e}");
+            await transaction.RollbackAsync();
+        }
+
+        return await GetAsync(creatureEntry);
     }
 
-    public Task CreateAsync(CreatureTemplate entity)
+    private static async Task InsertAddon(Identifier identifier, CreatureTemplateAddon addon, MySqlConnection connection, MySqlTransaction transaction)
     {
-        throw new NotImplementedException();
+        var parameters = new
+        {
+            Entry = identifier.Value,
+            addon.PathId,
+            addon.Mount,
+            MountCreatureID = addon.MountCreatureId,
+            addon.StandState,
+            addon.AnimTier,
+            addon.VisibilityFlags,
+            addon.SheathState,
+            addon.PvPFlags,
+            addon.Emote,
+            addon.AiAnimKit,
+            addon.MovementAnimKit,
+            addon.MeleeAnimKit,
+            addon.VisibilityDistanceType,
+            addon.Auras
+        };
+        
+        await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateAddon, parameters, transaction: transaction);
+    }
+    
+    private static async Task InsertEquipment(Identifier identifier, IReadOnlyCollection<CreatureEquipTemplate> equipments, MySqlConnection connection, MySqlTransaction transaction)
+    {
+        
+        foreach (var equipment in equipments)
+        {
+            var parameters = new
+            {
+                CreatureID = identifier.Value,
+                ID = equipment.Id,
+                ItemID1 = equipment.ItemId1,
+                AppearanceModID1 = equipment.AppearanceModelId1,
+                equipment.ItemVisual1,
+                ItemID2 = equipment.ItemId2,
+                AppearanceModID2 = equipment.AppearanceModelId2,
+                equipment.ItemVisual2,
+                ItemID3 = equipment.ItemId3,
+                AppearanceModID3 = equipment.AppearanceModelId3,
+                equipment.ItemVisual3
+            };
+            
+            await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateEquipments, parameters, transaction: transaction);
+        }
+    }
+
+    private static async Task InsertAppearance(Identifier identifier, IReadOnlyCollection<CreatureTemplateModel> models, MySqlConnection connection, MySqlTransaction transaction, IReadOnlyCollection<CreatureTemplateOutfits>? outfits = null)
+    {        
+        if (outfits is { Count: > 0 })
+        {
+            foreach (var outfit in outfits.Index())
+            {
+                var nextOutfitIdentifier = await connection.ExecuteScalarAsync<uint>(CreatureQueries.GetNextOutfitIdentifier, transaction: transaction);
+                
+                var outfitIdentifier = nextOutfitIdentifier < MinCreatureIdentifier.Value ? MinOutfitIdentifier : new Identifier(nextOutfitIdentifier);
+                
+                var outfitParameters = new
+                {
+                    Entry = outfitIdentifier.Value,
+                    NpcSoundsID = outfit.Item.NpcSoundsId,
+                    outfit.Item.Race,
+                    outfit.Item.Class,
+                    outfit.Item.Gender,
+                    outfit.Item.SpellVisualKitId,
+                    outfit.Item.Customizations,
+                    outfit.Item.Head,
+                    outfit.Item.HeadAppearance,
+                    outfit.Item.Shoulders,
+                    outfit.Item.ShouldersAppearance,
+                    outfit.Item.Body,
+                    outfit.Item.BodyAppearance,
+                    outfit.Item.Chest,
+                    outfit.Item.ChestAppearance,
+                    outfit.Item.Waist,
+                    outfit.Item.WaistAppearance,
+                    outfit.Item.Legs,
+                    outfit.Item.LegsAppearance,
+                    outfit.Item.Feet,
+                    outfit.Item.FeetAppearance,
+                    outfit.Item.Wrists,
+                    outfit.Item.WristsAppearance,
+                    outfit.Item.Hands,
+                    outfit.Item.HandsAppearance,
+                    outfit.Item.Back,
+                    outfit.Item.BackAppearance,
+                    outfit.Item.Tabard,
+                    outfit.Item.TabardAppearance,
+                    outfit.Item.GuildId,
+                    outfit.Item.Description
+                };
+
+                var model = models.ElementAt(outfit.Index);
+
+                var outfitModel = new
+                {
+                    CreatureId = identifier.Value,
+                    Idx = models.ElementAt(outfit.Index).Index,
+                    CreatureDisplayId = outfitIdentifier.Value,
+                    models.ElementAt(outfit.Index).DisplayScale,
+                    models.ElementAt(outfit.Index).Probability
+                };
+
+               await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateOutfits, outfitParameters, transaction: transaction);
+                
+               await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateModels, outfitModel, transaction: transaction);
+
+            }
+        }
+        else
+        {
+            foreach (var model in models)
+            {
+                var modelParameters = new
+                {
+                    CreatureId = identifier.Value,
+                    Idx = model.Index,
+                    CreatureDisplayId = model.DisplayId,
+                    model.DisplayScale,
+                    model.Probability
+                };
+                
+                await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateModels, modelParameters, transaction: transaction);
+            }
+        }
+        
     }
 
     public Task DeleteAsync(CreatureTemplate entity)
@@ -418,6 +632,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         
         return addon;
     }
+
     public async Task<IReadOnlyCollection<CreatureLookup>?> GetCreaturesLookupAsync(Locale locale)
     {
         var localeStr = locale switch
@@ -483,6 +698,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         return dictionary.Count > 0 ? dictionary.ToFrozenDictionary() : null;
     }
 
+
     public async Task<IReadOnlyCollection<CreatureTemplateModel>?> GetCreatureModelsAsync(Identifier creatureEntry)
     {
         await using var connection = provider.GetWorldDatabase();
@@ -514,11 +730,10 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
             await connection.ExecuteReaderAsync(CreatureQueries.GetOutfits, new {Entry = creatureEntry.Value});
 
         List<CreatureTemplateOutfits>? outfits = [];
-        var index = 0;
 
         while (await reader.ReadAsync())
         {
-            index = 0;
+            var index = 0;
             
             outfits.Add(CreatureTemplateOutfits.Builder
                 .WithIdentifier(reader.GetUInt32(index++))
@@ -528,7 +743,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
                 .WithGender(reader.GetByte(index++))
                 .WithSpellVisualKitId(reader.GetInt32(index++))
                 .WithCustomizations(reader.GetStringOrDefault(index++))
-                .WithHead(reader.GetUInt32(index++))
+                .WithHead(reader.GetInt64(index++))
                 .WithHeadAppearance(reader.GetUInt32(index++))
                 .WithShoulders(reader.GetInt64(index++))
                 .WithShouldersAppearance(reader.GetUInt32(index++))
@@ -546,9 +761,9 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
                 .WithWristsAppearance(reader.GetUInt32(index++))
                 .WithHands(reader.GetInt64(index++))
                 .WithHandsAppearance(reader.GetUInt32(index++))
-                .WithBack(reader.GetUInt32(index++))
+                .WithBack(reader.GetInt64(index++))
                 .WithBackAppearance(reader.GetUInt32(index++))
-                .WithTabard(reader.GetUInt32(index++))
+                .WithTabard(reader.GetInt64(index++))
                 .WithTabardAppearance(reader.GetUInt32(index++))
                 .WithGuildId(reader.GetUInt32(index++))
                 .WithDescription(reader.GetStringOrDefault(index))

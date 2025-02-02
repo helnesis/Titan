@@ -8,7 +8,7 @@ namespace Titan.Persistence.Repositories.Interfaces;
 
 public interface ICreatureRepository : IRepository<CreatureTemplate>
 {
-
+    
     /// <summary>
     /// Retrieves a collection of creatures from the database, as a tuple of creature entry and creature name.
     /// </summary>

@@ -2,4 +2,4 @@
 
 namespace Titan.Domain.Entities.Base;
 
-public abstract record Entity([property: JsonPropertyOrder(-1)] Identifier Identifier) : IEntity;
+public abstract record Entity([property: JsonPropertyOrder(-1), JsonPropertyName("identifier")] Identifier Identifier) : IEntity;

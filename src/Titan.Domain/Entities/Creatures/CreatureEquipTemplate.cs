@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities.Base;
@@ -6,26 +7,35 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureEquipTemplate : Entity
 {
-    public Identifier CreatureEntry { get; init; }
     
+    [JsonPropertyName("id")]
     public uint Id { get; init; }
-    
+
+    [JsonPropertyName("itemId1")]
     public uint ItemId1 { get; init; }
-    
+
+    [JsonPropertyName("appearanceModelId1")]
     public uint AppearanceModelId1 { get; init; }
-    
+
+    [JsonPropertyName("itemVisual1")]
     public uint ItemVisual1 { get; init; }
-    
+
+    [JsonPropertyName("itemId2")]
     public uint ItemId2 { get; init; }
-    
+
+    [JsonPropertyName("appearanceModelId2")]
     public uint AppearanceModelId2 { get; init; }
-    
+
+    [JsonPropertyName("itemVisual2")]
     public uint ItemVisual2 { get; init; }
-    
+
+    [JsonPropertyName("itemId3")]
     public uint ItemId3 { get; init; }
-    
+
+    [JsonPropertyName("appearanceModelId3")]
     public uint AppearanceModelId3 { get; init; }
-    
+
+    [JsonPropertyName("itemVisual3")]
     public uint ItemVisual3 { get; init; }
     
     internal CreatureEquipTemplate(Identifier identifier, uint id, uint itemId1, uint appearanceModelId1, uint itemVisual1, uint itemId2, uint appearanceModelId2, uint itemVisual2, uint itemId3, uint appearanceModelId3, uint itemVisual3) : base(identifier)

@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Builders.Implementations.Creatures;
+﻿using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 
 namespace Titan.Domain.Entities.Creatures;
@@ -8,13 +9,19 @@ public sealed record CreatureTemplateSparring
     /// <summary>
     /// The creature entry.
     /// </summary>
+    
+    [JsonPropertyName("creatureEntry")]
     public Identifier CreatureEntry { get; init; }
 
     /// <summary>
     /// The percentage of health below which the creature will not take damage from NPCs.
     /// </summary>
+    
+    [JsonPropertyName("noNpcDamageBelowHealthPct")]
     public float NoNpcDamageBelowHealthPct { get; init; }
 
+    
+    [JsonConstructor]
     internal CreatureTemplateSparring(Identifier identifier, float noNpcDamageBelowHealthPct)
         => (CreatureEntry, NoNpcDamageBelowHealthPct) = (identifier, noNpcDamageBelowHealthPct);
 

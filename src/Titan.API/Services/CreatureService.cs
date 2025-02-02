@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Memory;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Entities.Creatures.Lookup;
@@ -91,6 +93,13 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
         var creatureList = await creatureRepository.GetCreaturesLookupAsync(locale);
         
         return creatureList is { Count: 0 } ? TypedResults.NotFound() : TypedResults.Ok(creatureList);
+    }
+
+
+    public async Task<Results<Ok<CreatureTemplate>, InternalServerError>> CreateCreature(CreatureTemplate creatureTemplate)
+    {
+        var creature = await creatureRepository.CreateAsync(creatureTemplate);
+        return creature is null ? TypedResults.InternalServerError() : TypedResults.Ok(creature);
     }
 
 }

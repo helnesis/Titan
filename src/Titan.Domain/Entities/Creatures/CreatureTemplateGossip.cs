@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Builders.Implementations.Creatures;
+﻿using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities.Base;
 
@@ -6,7 +7,10 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureTemplateGossip : Entity
 {
+    [JsonPropertyName("menuId")]
     public uint MenuId { get; init; }
+    
+    [JsonConstructor]
     internal CreatureTemplateGossip(Identifier identifier, uint menuId) : base(identifier)
         => MenuId = menuId;
     

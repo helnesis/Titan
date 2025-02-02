@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Builders.Implementations.Creatures;
+﻿using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 
 namespace Titan.Domain.Entities.Creatures;
@@ -8,18 +9,22 @@ public sealed record CreatureTemplateSpell
     /// <summary>
     /// The creature's entry.
     /// </summary>
+    [JsonPropertyName("creatureEntry")]
     public Identifier CreatureEntry { get; init; }
     
     /// <summary>
     /// Spell index, related to the creature's spell bar.
     /// </summary>
+    [JsonPropertyName("index")]
     public byte Index { get; init; }
     
     /// <summary>
     /// The spell entry.
     /// </summary>
+    [JsonPropertyName("spellEntry")]
     public Identifier SpellEntry { get; init; }
 
+    [JsonConstructor]
     internal CreatureTemplateSpell(Identifier creatureEntry, byte index, Identifier spellEntry) => 
         (CreatureEntry, Index, SpellEntry) = (creatureEntry, index, spellEntry);
 

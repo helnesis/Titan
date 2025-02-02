@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Builders.Implementations.Creatures;
+﻿using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities.Base;
 
@@ -6,48 +7,99 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureTemplateDifficulty : Entity
 {
-    public byte DifficultyID { get; init; }
+    [JsonPropertyName("difficultyId")]
+    public byte DifficultyId { get; init; }
+
+    [JsonPropertyName("levelScalingDeltaMin")]
     public short LevelScalingDeltaMin { get; init; }
+
+    [JsonPropertyName("levelScalingDeltaMax")]
     public short LevelScalingDeltaMax { get; init; }
-    public int ContentTuningID { get; init; }
+
+    [JsonPropertyName("contentTuningId")]
+    public int ContentTuningId { get; init; }
+
+    [JsonPropertyName("healthScalingExpansion")]
     public int HealthScalingExpansion { get; init; }
+
+    [JsonPropertyName("healthModifier")]
     public float HealthModifier { get; init; }
+
+    [JsonPropertyName("manaModifier")]
     public float ManaModifier { get; init; }
+
+    [JsonPropertyName("armorModifier")]
     public float ArmorModifier { get; init; }
+
+    [JsonPropertyName("damageModifier")]
     public float DamageModifier { get; init; }
-    public int CreatureDifficultyID { get; init; }
+
+    [JsonPropertyName("creatureDifficultyId")]
+    public int CreatureDifficultyId { get; init; }
+
+    [JsonPropertyName("typeFlags")]
     public uint TypeFlags { get; init; }
+
+    [JsonPropertyName("typeFlags2")]
     public uint TypeFlags2 { get; init; }
-    public uint LootID { get; init; }
-    public uint PickPocketLootID { get; init; }
-    public uint SkinLootID { get; init; }
+
+    [JsonPropertyName("lootId")]
+    public uint LootId { get; init; }
+
+    [JsonPropertyName("pickPocketLootId")]
+    public uint PickPocketLootId { get; init; }
+
+    [JsonPropertyName("skinLootId")]
+    public uint SkinLootId { get; init; }
+
+    [JsonPropertyName("goldMin")]
     public uint GoldMin { get; init; }
+
+    [JsonPropertyName("goldMax")]
     public uint GoldMax { get; init; }
+
+    [JsonPropertyName("staticFlags1")]
     public uint StaticFlags1 { get; init; }
+
+    [JsonPropertyName("staticFlags2")]
     public uint StaticFlags2 { get; init; }
+
+    [JsonPropertyName("staticFlags3")]
     public uint StaticFlags3 { get; init; }
+
+    [JsonPropertyName("staticFlags4")]
     public uint StaticFlags4 { get; init; }
+
+    [JsonPropertyName("staticFlags5")]
     public uint StaticFlags5 { get; init; }
+
+    [JsonPropertyName("staticFlags6")]
     public uint StaticFlags6 { get; init; }
+
+    [JsonPropertyName("staticFlags7")]
     public uint StaticFlags7 { get; init; }
+
+    [JsonPropertyName("staticFlags8")]
     public uint StaticFlags8 { get; init; }
+    
+    [JsonConstructor]
     internal CreatureTemplateDifficulty(
         Identifier identifier,
-        byte difficultyID,
+        byte difficultyId,
         short levelScalingDeltaMin,
         short levelScalingDeltaMax,
-        int contentTuningID,
+        int contentTuningId,
         int healthScalingExpansion,
         float healthModifier,
         float manaModifier,
         float armorModifier,
         float damageModifier,
-        int creatureDifficultyID,
+        int creatureDifficultyId,
         uint typeFlags,
         uint typeFlags2,
-        uint lootID,
-        uint pickPocketLootID,
-        uint skinLootID,
+        uint lootId,
+        uint pickPocketLootId,
+        uint skinLootId,
         uint goldMin,
         uint goldMax,
         uint staticFlags1,
@@ -59,21 +111,21 @@ public sealed record CreatureTemplateDifficulty : Entity
         uint staticFlags7,
         uint staticFlags8
     ) : base(identifier) => (
-        DifficultyID,
+        DifficultyId,
         LevelScalingDeltaMin,
         LevelScalingDeltaMax,
-        ContentTuningID,
+        ContentTuningId,
         HealthScalingExpansion,
         HealthModifier,
         ManaModifier,
         ArmorModifier,
         DamageModifier,
-        CreatureDifficultyID,
+        CreatureDifficultyId,
         TypeFlags,
         TypeFlags2,
-        LootID,
-        PickPocketLootID,
-        SkinLootID,
+        LootId,
+        PickPocketLootId,
+        SkinLootId,
         GoldMin,
         GoldMax,
         StaticFlags1,
@@ -85,21 +137,21 @@ public sealed record CreatureTemplateDifficulty : Entity
         StaticFlags7,
         StaticFlags8
     ) = (
-        difficultyID,
+        difficultyId,
         levelScalingDeltaMin,
         levelScalingDeltaMax,
-        contentTuningID,
+        contentTuningId,
         healthScalingExpansion,
         healthModifier,
         manaModifier,
         armorModifier,
         damageModifier,
-        creatureDifficultyID,
+        creatureDifficultyId,
         typeFlags,
         typeFlags2,
-        lootID,
-        pickPocketLootID,
-        skinLootID,
+        lootId,
+        pickPocketLootId,
+        skinLootId,
         goldMin,
         goldMax,
         staticFlags1,

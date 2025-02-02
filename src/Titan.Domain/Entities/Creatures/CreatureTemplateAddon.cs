@@ -1,4 +1,5 @@
-﻿using Titan.Domain.Builders.Implementations.Creatures;
+﻿using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities.Base;
 
@@ -6,25 +7,49 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureTemplateAddon : Entity
 {
+    [JsonPropertyName("pathId")]
     public uint PathId { get; init; }
+
+    [JsonPropertyName("mount")]
     public uint Mount { get; init; }
+
+    [JsonPropertyName("mountCreatureId")]
     public uint MountCreatureId { get; init; }
+
+    [JsonPropertyName("standState")]
     public byte StandState { get; init; }
+
+    [JsonPropertyName("animTier")]
     public byte AnimTier { get; init; }
 
-    //@TODO: Replace me with a proper enum
+    [JsonPropertyName("visibilityFlags")]
     public byte VisibilityFlags { get; init; }
+
+    [JsonPropertyName("sheathState")]
     public byte SheathState { get; init; }
 
-    //@TODO: Replace me with a proper enum
+    [JsonPropertyName("pvpFlags")]
     public byte PvPFlags { get; init; }
+
+    [JsonPropertyName("emote")]
     public uint Emote { get; init; }
+
+    [JsonPropertyName("aiAnimKit")]
     public short AiAnimKit { get; init; }
+
+    [JsonPropertyName("movementAnimKit")]
     public short MovementAnimKit { get; init; }
+
+    [JsonPropertyName("meleeAnimKit")]
     public short MeleeAnimKit { get; init; }
+
+    [JsonPropertyName("visibilityDistanceType")]
     public byte VisibilityDistanceType { get; init; }
+
+    [JsonPropertyName("auras")]
     public string Auras { get; init; }
 
+    [JsonConstructor]
     internal CreatureTemplateAddon(
         Identifier identifier,
         uint pathId,
