@@ -1,14 +1,11 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.Extensions.Caching.Memory;
-using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Entities.Creatures.Lookup;
 using Titan.Domain.Enums;
 using Titan.Persistence.Repositories.Interfaces;
 
-namespace Titan.API.Services;
+namespace Titan.API.Services.TC;
 
 public sealed class CreatureService(ICreatureRepository creatureRepository)
 {
@@ -29,6 +26,24 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
         
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
+    
+    
+    /// <summary>
+    /// Retrieves base mana for a creature by its level and class.
+    /// </summary>
+    /// <param name="level">Creature level</param>
+    /// <param name="unitClass">Creature class</param>
+    /// <returns>
+    /// A task that represents the asynchronous operation.
+    /// The result contains either an <see cref="Ok{T}"/> result with the base mana if found, or a <see cref="NotFound"/> result if the creature does not exist.
+    /// </returns>
+    public async Task<Results<Ok<int>, NotFound>> GetCreatureBaseMana(byte level, byte unitClass)
+    {
+        var baseMana = await creatureRepository.GetBaseManaByLevel(level, unitClass);
+        
+        return baseMana != -1 ? TypedResults.Ok(baseMana) : TypedResults.NotFound();
+    }
+    
 
     /// <summary>
     /// Retrieves a creature by its unique identifier.

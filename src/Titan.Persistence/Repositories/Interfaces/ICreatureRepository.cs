@@ -10,6 +10,14 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
 {
     
     /// <summary>
+    /// Retrieves the base mana for a given level and class.
+    /// </summary>
+    /// <param name="level">Level</param>
+    /// <param name="unitClass">Class</param>
+    /// <returns>Base mana</returns>
+    public Task<int> GetBaseManaByLevel(byte level, byte unitClass);
+    
+    /// <summary>
     /// Retrieves a collection of creatures from the database, as a tuple of creature entry and creature name.
     /// </summary>
     /// <returns>

@@ -23,6 +23,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Titan.Domain\Titan.Domain.csproj" />
       <ProjectReference Include="..\Titan.Persistence\Titan.Persistence.csproj" />
+      <ProjectReference Include="..\Titan.SOAP\Titan.SOAP.csproj" />
     </ItemGroup>
 
 </Project>

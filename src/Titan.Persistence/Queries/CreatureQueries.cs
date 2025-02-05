@@ -32,6 +32,13 @@ internal static class CreatureQueries
                                         ct.ExperienceModifier, ct.RacialLeader, ct.movementId, ct.WidgetSetId, ct.WidgetSetUnitConditionID, 
                                         ct.RegenHealth, ct.CreatureImmunitiesId, ct.ScriptName, ct.StringId FROM creature_template ct
                                  """;
+
+
+
+    /// <summary>
+    /// Get base mana by level and class.
+    /// </summary>
+    public const string GetBaseManaByLevelAndClass = "SELECT cs.basemana FROM creature_classlevelstats cs WHERE cs.level = @Level AND cs.class = @UnitClass";
     
     
     /// <summary>
@@ -229,15 +236,15 @@ internal static class CreatureQueries
                                                                                           GoldMin, GoldMax, StaticFlags1, StaticFlags2, StaticFlags3, StaticFlags4, StaticFlags5,
                                                                                           StaticFlags6, StaticFlags7, StaticFlags8)
                                                                                           
-                                                VALUES (@Entry, @DifficultyID, @LevelScalingDeltaMin, @LevelScalingDeltaMax, @ContentTuningID,
+                                                VALUES (@Entry, @DifficultyId, @LevelScalingDeltaMin, @LevelScalingDeltaMax, @ContentTuningId,
                                                         @HealthScalingExpansion, @HealthModifier, @ManaModifier, @ArmorModifier, @DamageModifier,
-                                                        @CreatureDifficultyId, @TypeFlags, @TypeFlags2, @LootID, @PickPocketLootID, @SkinLootID,
+                                                        @CreatureDifficultyId, @TypeFlags, @TypeFlags2, @LootId, @PickPocketLootId, @SkinLootId,
                                                         @GoldMin, @GoldMax, @StaticFlags1, @StaticFlags2, @StaticFlags3, @StaticFlags4, @StaticFlags5,
                                                         @StaticFlags6, @StaticFlags7, @StaticFlags8)
                                                         
-                                                ON DUPLICATE KEY UPDATE DifficultyID = @DifficultyID, LevelScalingDeltaMin = @LevelScalingDeltaMin, LevelScalingDeltaMax = @LevelScalingDeltaMax, ContentTuningID = @ContentTuningID,
+                                                ON DUPLICATE KEY UPDATE DifficultyID = @DifficultyId, LevelScalingDeltaMin = @LevelScalingDeltaMin, LevelScalingDeltaMax = @LevelScalingDeltaMax, ContentTuningID = @ContentTuningId,
                                                                         HealthScalingExpansion = @HealthScalingExpansion, HealthModifier = @HealthModifier, ManaModifier = @ManaModifier, ArmorModifier = @ArmorModifier, DamageModifier = @DamageModifier,
-                                                                        CreatureDifficultyId = @CreatureDifficultyId, TypeFlags = @TypeFlags, TypeFlags2 = @TypeFlags2, LootID = @LootID, PickPocketLootID = @PickPocketLootID, SkinLootID = @SkinLootID,
+                                                                        CreatureDifficultyId = @CreatureDifficultyId, TypeFlags = @TypeFlags, TypeFlags2 = @TypeFlags2, LootID = @LootId, PickPocketLootId = @PickPocketLootId, SkinLootID = @SkinLootId,
                                                                         GoldMin = @GoldMin, GoldMax = @GoldMax, StaticFlags1 = @StaticFlags1, StaticFlags2 = @StaticFlags2, StaticFlags3 = @StaticFlags3, StaticFlags4 = @StaticFlags4, StaticFlags5 = @StaticFlags5,
                                                                         StaticFlags6 = @StaticFlags6, StaticFlags7 = @StaticFlags7, StaticFlags8 = @StaticFlags8
                                                 """;

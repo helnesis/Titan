@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Data;
 using System.Diagnostics;
 using System.IO.Pipelines;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Transactions;
 using MySqlConnector;
@@ -93,6 +94,9 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
 
             await connection.ExecuteAsync(CreatureQueries.InsertOrUpdate, parameters, transaction);
             
+            if (entity.Difficulties is not null && entity.Difficulties.Count > 0)
+                await InsertDifficulties(creatureEntry, entity.Difficulties, connection, transaction);
+            
             if (entity.Addon is not null)
                 await InsertAddon(creatureEntry, entity.Addon, connection, transaction);
             
@@ -101,6 +105,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
             
             if (entity.Models is not null && entity.Models.Count > 0)
                 await InsertAppearance(creatureEntry, entity.Models, connection, transaction, entity.Outfits);
+            
             
             await transaction.CommitAsync();
             
@@ -136,6 +141,50 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         };
         
         await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateAddon, parameters, transaction: transaction);
+    }
+
+    private static async Task InsertDifficulties(Identifier identifier,
+        IReadOnlyCollection<CreatureTemplateDifficulty> difficulties, MySqlConnection connection,
+        MySqlTransaction transaction)
+    {
+        
+        foreach (var difficulty in difficulties)
+        {
+            var parameters = new
+            {
+                Entry = identifier.Value,
+                difficulty.DifficultyId,
+                difficulty.LevelScalingDeltaMin ,
+                difficulty.LevelScalingDeltaMax,
+                difficulty.ContentTuningId,
+                difficulty.HealthScalingExpansion,
+                difficulty.HealthModifier,
+                difficulty.ManaModifier,
+                difficulty.ArmorModifier,
+                difficulty.DamageModifier,
+                difficulty.CreatureDifficultyId,
+                difficulty.TypeFlags,
+                difficulty.TypeFlags2,
+                difficulty.LootId,
+                difficulty.PickPocketLootId,
+                difficulty.SkinLootId,
+                difficulty.GoldMin,
+                difficulty.GoldMax,
+                difficulty.StaticFlags1,
+                difficulty.StaticFlags2,
+                difficulty.StaticFlags3,
+                difficulty.StaticFlags4,
+                difficulty.StaticFlags5,
+                difficulty.StaticFlags6,
+                difficulty.StaticFlags7,
+                difficulty.StaticFlags8
+                
+            };
+            
+            await connection.ExecuteAsync(CreatureQueries.InsertOrUpdateDifficulty, parameters, transaction: transaction);
+            
+        }
+
     }
     
     private static async Task InsertEquipment(Identifier identifier, IReadOnlyCollection<CreatureEquipTemplate> equipments, MySqlConnection connection, MySqlTransaction transaction)
@@ -631,6 +680,19 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         }
         
         return addon;
+    }
+
+    public async Task<int> GetBaseManaByLevel(byte level, byte unitClass)
+    {
+        if (level is < 1 or > 70)
+            return -1;
+        
+        Console.WriteLine($"Args: level={level} unitClass={unitClass}");
+        
+        await using var connection = provider.GetWorldDatabase();
+        var mana = await connection.ExecuteScalarAsync<int?>(CreatureQueries.GetBaseManaByLevelAndClass, new { Level = level, UnitClass = unitClass } );
+
+        return mana ?? -1;
     }
 
     public async Task<IReadOnlyCollection<CreatureLookup>?> GetCreaturesLookupAsync(Locale locale)
