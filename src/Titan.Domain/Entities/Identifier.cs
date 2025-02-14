@@ -5,7 +5,7 @@ namespace Titan.Domain.Entities;
 
 public readonly record struct Identifier(uint Value) : IParsable<Identifier>
 {
-    public readonly static Identifier Empty = uint.MinValue;
+    public static readonly Identifier Empty = uint.MinValue;
 
     public static Identifier Create(uint value) => value;
 
@@ -16,12 +16,11 @@ public readonly record struct Identifier(uint Value) : IParsable<Identifier>
     {
         result = default;
 
-        if (uint.TryParse(s: s, provider: provider, out uint value))
-        {
-            result = new Identifier(value);
-            return true;
-        }
-        return false;
+        if (!uint.TryParse(s: s, provider: provider, out uint value)) return false;
+        
+        result = new Identifier(value);
+        
+        return true;
     }
 
     public static implicit operator Identifier(uint identifier) => new(identifier);

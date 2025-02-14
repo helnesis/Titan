@@ -33,7 +33,7 @@ public interface ICreatureRepository : IRepository<CreatureTemplate>
     /// A task that represents the asynchronous operation. 
     /// The task result contains a dictionary where the key is the locale and the value is the corresponding localized creature information.
     /// </returns>
-    Task<IReadOnlyDictionary<Locale, CreatureTemplateLocale>?> GetCreatureLocalesAsync(Identifier creatureEntry);
+    Task<IReadOnlyDictionary<Locale, CreatureTemplateLocale>?>  GetCreatureLocalesAsync(Identifier creatureEntry);
 
     /// <summary>
     /// Retrieves models for creatures, including display identifier, display scale and other details.

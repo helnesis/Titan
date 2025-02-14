@@ -1,21 +1,21 @@
-using System.Net;
-using System.Text;
-using System.Xml;
-using Titan.SOAP.Base.Command;
-using Titan.SOAP.Settings;
+using Titan.SOAP.Base.Command.Handler;
 
 namespace Titan.SOAP.Base.Client;
-
 
 public sealed class TrinitySoap(SoapSettings settings) : ISoapClient
 {
     private const string GetResultTag = "result";
     private const string GetErrorTag = "faultstring";
     public string Endpoint => $"http://{settings.Host}:{settings.Port}/";
-
-    public AuthCommand AuthCommand => new(this);
-    
-    public WorldCommand WorldCommand => new WorldCommand(this);
+    public CommandHandler CommandHandler => new(SendCommandAsync);
+    private async Task<SoapResponse> SendCommandAsync(GameCommand gameCommand, string[] args)
+    {
+        var command = GameCommandDefinition.GetCommand(gameCommand);
+        
+        if (command is null) return SoapResponse.FailureResponse("Invalid command.");
+        
+        return await SendAsync(command, args);
+    }
     
     public async Task<SoapResponse> SendAsync(string action, params string[] args)
     {

@@ -36,7 +36,7 @@ internal static class CreatureQueries
 
 
     /// <summary>
-    /// Get base mana by level and class.
+    /// Get base mana by level and class. 
     /// </summary>
     public const string GetBaseManaByLevelAndClass = "SELECT cs.basemana FROM creature_classlevelstats cs WHERE cs.level = @Level AND cs.class = @UnitClass";
     
