@@ -3,6 +3,8 @@ using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
 using Titan.Domain.Enums;
 
+namespace Titan.Domain.Builders.Implementations.Creatures;
+
 public class CreatureTemplateFlagsBuilder : ICreatureTemplateFlagsBuilder
 {
     private CreatureExtraFlags _extraFlags;

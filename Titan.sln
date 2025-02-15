@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.Shared", "src\Titan.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.SOAP", "src\Titan.SOAP\Titan.SOAP.csproj", "{04CE4E74-0D38-4AAE-8D71-3202F961661B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.DatabaseGenerator", "src\Titan.DatabaseGenerator\Titan.DatabaseGenerator.csproj", "{3294788D-FAFE-4CB8-B6EE-9FEB8AC8BBA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{04CE4E74-0D38-4AAE-8D71-3202F961661B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CE4E74-0D38-4AAE-8D71-3202F961661B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04CE4E74-0D38-4AAE-8D71-3202F961661B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3294788D-FAFE-4CB8-B6EE-9FEB8AC8BBA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3294788D-FAFE-4CB8-B6EE-9FEB8AC8BBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3294788D-FAFE-4CB8-B6EE-9FEB8AC8BBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3294788D-FAFE-4CB8-B6EE-9FEB8AC8BBA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

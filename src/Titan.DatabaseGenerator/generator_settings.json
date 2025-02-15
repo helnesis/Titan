@@ -1,0 +1,26 @@
+{
+  "Databases": {
+
+    "AuthDatabase": "Server=127.0.0.1;Database=auth;Uid=Helnesis;Pwd=helnesis;",
+
+    "CharacterDatabase": "Server=127.0.0.1;Database=characters;Uid=Helnesis;Pwd=helnesis;",
+
+    "WorldDatabase": "Server=127.0.0.1;Database=world;Uid=Helnesis;Pwd=helnesis;",
+
+    "HotfixesDatabase": "Server=127.0.0.1;Database=hotfixes;Uid=Helnesis;Pwd=helnesis;"
+  },
+  
+  "IO": {
+    "OutputPath": "./output/"
+  },
+  
+  "Entities": [
+    "item",
+    "item_appearance",
+    "item_modified_appearance",
+    "item_modified_appearance_extra",
+    "item_name_description",
+    "item_name_description_locale",
+    "item_sparse_locale"
+  ]
+}
