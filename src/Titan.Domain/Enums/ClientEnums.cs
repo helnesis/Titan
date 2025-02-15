@@ -1,33 +1,33 @@
 ﻿namespace Titan.Domain.Enums;
 public enum Locale : byte
 {
-    enUS = 0,
+    EnUs = 0,
     
-    enGB = enUS,
+    EnGb = EnUs,
     
-    koKR = 1,
+    KoKr = 1,
     
-    frFR = 2,
+    FrFr = 2,
     
-    deDE = 3,
+    DeDe = 3,
     
-    enCN = 4,
+    EnCn = 4,
     
-    zhCN = enCN,
+    ZhCn = EnCn,
     
-    enTW = 5,
+    EnTw = 5,
     
-    zhTW = enTW,
+    ZhTw = EnTw,
     
-    esES = 6,
+    EsEs = 6,
     
-    esMX = 7,
+    EsMx = 7,
     
-    ruRU = 8,
+    RuRu = 8,
     
-    ptPT = 10,
+    PtPt = 10,
     
-    ptBR = ptPT,
+    PtBr = PtPt,
     
-    itIT = 11,
+    ItIt = 11,
 }

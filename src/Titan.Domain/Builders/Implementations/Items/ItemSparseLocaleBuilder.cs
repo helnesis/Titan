@@ -1,18 +1,26 @@
 using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Items;
+using Titan.Domain.Enums;
 
 namespace Titan.Domain.Builders.Implementations.Items;
 
 public sealed class ItemSparseLocaleBuilder : IItemSparseLocaleBuilder
 {
     public Identifier Identifier { get; private set;}
+    private Locale _locale;
     private string? _descriptionLang;
     private string? _display3Lang;
     private string? _display2Lang;
     private string? _display1Lang;
     private string? _displayLang;
 
+    public IItemSparseLocaleBuilder WithLocale(Locale locale)
+    {
+        _locale = locale;
+        return this;
+    }
+    
     public IItemSparseLocaleBuilder WithIdentifier(Identifier identifier)
     {
         Identifier = identifier;
@@ -51,6 +59,7 @@ public sealed class ItemSparseLocaleBuilder : IItemSparseLocaleBuilder
     public ItemSparseLocale Build()
     {
         return new ItemSparseLocale(Identifier,
+            _locale,
             _descriptionLang,
             _display3Lang,
             _display2Lang,

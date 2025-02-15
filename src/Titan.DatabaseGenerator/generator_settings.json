@@ -21,6 +21,7 @@
     "item_modified_appearance_extra",
     "item_name_description",
     "item_name_description_locale",
-    "item_sparse_locale"
+    "item_sparse_locale",
+    "item_sparse"
   ]
 }

@@ -20,11 +20,12 @@ builder.Services.AddSingleton<IDatabaseConnectionFactory<MySqlConnection>, MySql
 builder.Services.AddSingleton<DatabaseProvider>();
 
 builder.Services.AddScoped<EntityGenerator>();
+builder.Services.AddScoped<QueryGenerator>();
 
 using var host = builder.Build();
 
 var generator = host.Services.GetRequiredService<EntityGenerator>();
-
+var queryGenerator = host.Services.GetRequiredService<QueryGenerator>();
 
 var entities = builder.Configuration.GetSection("Entities").GetChildren().Select(x => x.Value).ToList();
 
@@ -34,12 +35,15 @@ string output = builder.Configuration["IO:OutputPath"] ?? "output";
 if (!Directory.Exists(output))
     Directory.CreateDirectory(output);
 
+List<string> queries = [];
+
 foreach (var entity in entities)
 {
     if (entity is null)
         continue;
     
     var result = await generator.GenerateEntity(entity, DB.Hotfixes);
+    var queryResult = await queryGenerator.GenerateQueries("Item", entity, DB.Hotfixes);
     
     foreach (var kvp in result)
     {
@@ -58,7 +62,12 @@ foreach (var entity in entities)
         
         File.WriteAllText($"{Path.Combine(output, entity)}/{fileName}", kvp.Value);
     }
+
+    await using var writer = File.AppendText($"{output}/query.cs");
+    await writer.WriteLineAsync(queryResult);
 }
+
+
 
 
 await host.RunAsync();

@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Titan.Domain.Builders.Implementations.Items;
+using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities.Base;
 using Titan.Domain.Enums;
 
@@ -60,4 +62,6 @@ public sealed record ItemTemplate : Entity
         itemModifiedAppearance,
         itemModifiedAppearanceExtra
     );
+    
+    public static IItemTemplateBuilder Builder => new ItemTemplateBuilder();
 }

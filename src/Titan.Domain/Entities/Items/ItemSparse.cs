@@ -382,6 +382,7 @@ public sealed record ItemSparse : Entity
     public float StatPercentageOfSocket10 { get; init; }
 
     [JsonPropertyName("statPercentEditor1")]
+    
     public int StatPercentEditor1 { get; init; }
 
     [JsonPropertyName("statPercentEditor2")]

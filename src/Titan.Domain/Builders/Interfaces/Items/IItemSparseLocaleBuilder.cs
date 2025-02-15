@@ -1,12 +1,15 @@
 using Titan.Domain.Builders.Base;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Items;
+using Titan.Domain.Enums;
 
 namespace Titan.Domain.Builders.Interfaces.Items;
 
 public interface IItemSparseLocaleBuilder : IBuilder<ItemSparseLocale>
 {
     IItemSparseLocaleBuilder WithIdentifier(Identifier identifier);
+    
+    IItemSparseLocaleBuilder WithLocale(Locale locale);
 
     IItemSparseLocaleBuilder WithDescriptionLang(string? descriptionLang);
 
