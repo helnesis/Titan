@@ -14,8 +14,10 @@ using Titan.API.Models.Requests;
 using Titan.API.Services.Identity;
 using Titan.API.Services.Misc;
 using Titan.API.Services.TC;
+using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
+using Titan.Domain.Entities.Items;
 using Titan.Persistence;
 using Titan.Persistence.Factories;
 using Titan.Persistence.Factories.Base;
@@ -52,12 +54,14 @@ builder.Services.AddSingleton<DatabaseProvider>();
 
 // Repositories
 builder.Services.AddScoped<ICreatureRepository, CreatureRepository>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
 
 // SOAP client
 builder.Services.AddScoped<TrinitySoap>();
 
 // API internal services
 builder.Services.AddScoped<CreatureService>();
+builder.Services.AddScoped<ItemService>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddSingleton<RsaService>();
 
@@ -179,8 +183,18 @@ app.MapPost("/api/creature/", async ([FromBody] CreatureTemplate creature, [From
     => await creatureService.CreateCreature(creature))
     .RequireAuthorization();
 
-// Item endpoints
+app.MapPut("/api/creature/", async ([FromBody] CreatureTemplate creature, [FromServices] CreatureService creatureService)
+        => await creatureService.UpdateCreature(creature))
+    .RequireAuthorization();
 
+// Item endpoints
+app.MapGet("/api/item/{identifier}", async (Identifier identifier, [FromServices] ItemService itemService)
+    => await itemService.GetItemById(identifier))
+    .AllowAnonymous();
+
+app.MapGet("/api/item/", async ([FromServices] ItemService itemService)
+    => await itemService.GetAllItems())
+    .AllowAnonymous();
 
 // Gameobject endpoints
 

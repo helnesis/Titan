@@ -9,7 +9,7 @@ public class IdentifierTests
     [Test]
     public void TestIdentifier()
     {
-        var emptyIdentifier = Identifier.Empty;
+        var emptyIdentifier = Identifier.Min;
         Identifier identifierFromInteger = 22234;
         uint integerFromIdentifier = Identifier.Create(10);
         

@@ -10,7 +10,7 @@ namespace Titan.Persistence.Repositories.Base
         /// Inserts a new entity into the database.
         /// </summary>
         /// <param name="entity">Entity</param>
-        Task<T?> CreateAsync(T entity);
+        Task<T?> CreateOrUpdateAsync(T entity);
 
         /// <summary>
         /// Retrieves an entity from the database.
@@ -24,13 +24,7 @@ namespace Titan.Persistence.Repositories.Base
         /// </summary>
         /// <returns>A collection of entities</returns>
         Task<IReadOnlyCollection<T>> GetAllAsync();
-
-        /// <summary>
-        /// Updates an entity in the database.
-        /// </summary>
-        /// <param name="entity">Entity</param>
-        Task UpdateAsync(T entity);
-
+        
         /// <summary>
         /// Deletes an entity from the database.
         /// </summary>

@@ -33,7 +33,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
     }
     
     
-    public async Task<CreatureTemplate?> CreateAsync(CreatureTemplate entity)
+    public async Task<CreatureTemplate?> CreateOrUpdateAsync(CreatureTemplate entity)
     {
         await using var connection = provider.GetWorldDatabase();
 
@@ -312,7 +312,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         while (await reader.ReadAsync())
         {
             var index = 0;
-
+            
             builders.Add(CreatureTemplate.Builder
                 .WithIdentifier(reader.GetUInt32(index++))
                 .WithKillCredits(reader.GetUInt32(index++), reader.GetUInt32(index++))
@@ -856,15 +856,6 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
 
         return spells.Count > 0 ? spells.ToImmutableArray() : null;
     }
-
-    public Task UpdateAsync(CreatureTemplate entity)
-    {
-        var creatureId = entity.Identifier;
-        
-        throw new NotImplementedException();
-    }
-
-
     private async Task AddExtraDataAsync(IEnumerable<ICreatureTemplateBuilder> builders)
     {
         foreach (var creatureTemplateBuilder in builders)

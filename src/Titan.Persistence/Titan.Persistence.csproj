@@ -13,4 +13,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Titan.Domain\Titan.Domain.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\Interfaces\Pool\" />
+  </ItemGroup>
 </Project>

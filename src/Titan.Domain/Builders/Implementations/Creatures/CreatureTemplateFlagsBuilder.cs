@@ -43,7 +43,7 @@ public class CreatureTemplateFlagsBuilder : ICreatureTemplateFlagsBuilder
         return this;
     }
 
-    public Identifier Identifier { get; } = Identifier.Empty;
+    public Identifier Identifier { get; } = Identifier.Min;
     public CreatureTemplateFlags Build()
     {
         return new CreatureTemplateFlags(_extraFlags, _creatureFlags, _unitFlags, _unitFlags2, _unitFlags3);

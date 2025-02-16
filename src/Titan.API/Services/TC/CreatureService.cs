@@ -113,8 +113,14 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
 
     public async Task<Results<Ok<CreatureTemplate>, InternalServerError>> CreateCreature(CreatureTemplate creatureTemplate)
     {
-        var creature = await creatureRepository.CreateAsync(creatureTemplate);
+        var creature = await creatureRepository.CreateOrUpdateAsync(creatureTemplate);
         return creature is null ? TypedResults.InternalServerError() : TypedResults.Ok(creature);
     }
-
+    
+    public async Task<Results<NoContent, InternalServerError>> UpdateCreature(CreatureTemplate creatureTemplate)
+    {
+        var creature = await creatureRepository.CreateOrUpdateAsync(creatureTemplate);
+        return creature is null ? TypedResults.InternalServerError() : TypedResults.NoContent();
+    }
+    
 }

@@ -5,7 +5,7 @@ namespace Titan.Domain.Entities;
 
 public readonly record struct Identifier(uint Value) : IParsable<Identifier>
 {
-    public static readonly Identifier Empty = uint.MinValue;
+    public static readonly Identifier Min = uint.MinValue;
 
     public static Identifier Create(uint value) => value;
 

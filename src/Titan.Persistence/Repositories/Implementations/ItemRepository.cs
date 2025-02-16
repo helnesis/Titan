@@ -1,5 +1,6 @@
 using System.Data;
 using Dapper;
+using MySqlConnector;
 using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Items;
@@ -12,10 +13,45 @@ namespace Titan.Persistence.Repositories.Implementations;
 
 public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
 {
-    public Task<ItemTemplate?> CreateAsync(ItemTemplate entity)
+    private static readonly Identifier MinItemIdentifier = Identifier.Create(5000000);
+    private async Task<Identifier> NextIdentifier()
     {
+        await using var connection = provider.GetHotfixesDatabase();
+        var identifier = connection.ExecuteScalar<uint>(ItemQueries.NextIdentifier);
+        
+        return identifier < MinItemIdentifier.Value ? MinItemIdentifier : new Identifier(identifier);
+    }
+    
+    public async Task<ItemTemplate?> CreateOrUpdateAsync(ItemTemplate entity)
+    {
+        await using var connection = provider.GetHotfixesDatabase();
+
+        if (connection.State != ConnectionState.Open)
+            await connection.OpenAsync();
+        
+        await using var transaction = await connection.BeginTransactionAsync();
+
+        var identifier = entity.Identifier == Identifier.Min ? await NextIdentifier() : entity.Identifier;
+        
+        try
+        {
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItem, new { Identifier = identifier, entity.Definition } );
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemSparse, new { Identifier = identifier, entity.Sparse } );
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemNameDescription, new { Identifier = identifier, entity.NameDescription } );
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemAppearance, new { Identifier = identifier, entity.Appearance } );
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearance, new { Identifier = identifier, entity.ModifiedAppearance } );
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearanceExtra, new { Identifier = identifier, entity.ModifiedAppearanceExtra } );
+            
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+        }
+        
         throw new NotImplementedException();
     }
+    
 
     public async Task<ItemTemplate?> GetAsync(Identifier entityIdentifier)
     {
@@ -28,24 +64,36 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
             .Build();
     }
     
-    public Task<IReadOnlyCollection<ItemTemplate>> GetAllAsync()
+    public async Task<IReadOnlyCollection<ItemTemplate>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        await using var connection = provider.GetHotfixesDatabase();
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetAllItem);
+        
+        var items = new List<ItemTemplate>();
+        
+        while (await reader.ReadAsync())
+        {
+            var item = ItemTemplate.Builder
+                .WithIdentifier(reader.GetUInt32(0));
+            
+            await AddExtraDataAsync(item).ContinueWith(x =>
+            {
+                items.Add(item.Build());
+            });
+            
+        }
+        
+        return items;
     }
-
-    public Task UpdateAsync(ItemTemplate entity)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public Task DeleteAsync(ItemTemplate entity)
     {
         throw new NotImplementedException();
     }
     
-    public Task<bool> ExistsAsync(Identifier identifier)
+    public async Task<bool> ExistsAsync(Identifier identifier)
     {
-        throw new NotImplementedException();
+        return await GetAsync(identifier) != null;
     }
 
     private async Task AddExtraDataAsync(IItemTemplateBuilder builder)
@@ -80,7 +128,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<Item?> GetItemDefinitionAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemById, new{ Entry = identifier.Value });
         
         Item? item = null;
         var index = 0;
@@ -109,7 +157,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<ItemSparse?> GetItemSparseAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemSparseById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemSparseById, new{ Entry = identifier.Value });
         
         ItemSparse? itemSparse = null;
         var index = 0;
@@ -224,7 +272,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<ItemNameDescription?> GetItemNameDescriptionAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemNameDescriptionById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemNameDescriptionById, new{ Entry = identifier.Value });
         
         ItemNameDescription? itemNameDescription = null;
         var index = 0;
@@ -247,10 +295,10 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
         var wowLocales = Enum.GetValues<Locale>();
         
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemSparseLocaleById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemSparseLocaleById, new{ Entry = identifier.Value });
         
-        var locales = new Dictionary<Locale, ItemSparseLocale>();
-
+        Dictionary<Locale, ItemSparseLocale>? locales = null;
+        
         for (var i = 0; i < wowLocales.Length; i++)
         {
             var index = 0;
@@ -267,7 +315,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
                     .WithDisplay3Lang(reader.GetStringOrDefault(index++))
                     .Build();
                 
-                locales.Add(locale, itemSparseLocale);
+                locales?.Add(locale, itemSparseLocale);
             }
         }
         
@@ -279,9 +327,9 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
         var wowLocales = Enum.GetValues<Locale>();
         
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemNameDescriptionLocaleById);
-        
-        var locales = new Dictionary<Locale, ItemNameDescriptionLocale>();
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemNameDescriptionLocaleById, new{ Entry = identifier.Value });
+
+        Dictionary<Locale, ItemNameDescriptionLocale>? locales = null;
 
         for (var i = 0; i < wowLocales.Length; i++)
         {
@@ -295,7 +343,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
                     .WithDescriptionLang(reader.GetStringOrDefault(index++))
                     .Build();
                 
-                locales.Add(locale, itemSparseLocale);
+                locales?.Add(locale, itemSparseLocale);
             }
         }
         return locales;
@@ -304,7 +352,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<ItemAppearance?> GetItemAppearanceAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemAppearanceById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemAppearanceById, new{ Entry = identifier.Value });
         
         ItemAppearance? itemAppearance = null;
         var index = 0;
@@ -329,7 +377,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<ItemModifiedAppearance?> GetItemModifiedAppearanceAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemModifiedAppearanceById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemModifiedAppearanceById, new{ Entry = identifier.Value });
         
         ItemModifiedAppearance? itemModifiedAppearance = null;
         var index = 0;
@@ -353,7 +401,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
     public async Task<ItemModifiedAppearanceExtra?> GetItemModifiedAppearanceExtraAsync(Identifier identifier)
     {
         await using var connection = provider.GetHotfixesDatabase();
-        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemModifiedAppearanceExtraById);
+        await using var reader = await connection.ExecuteReaderAsync(ItemQueries.GetItemModifiedAppearanceExtraById, new{ Entry = identifier.Value });
         
         ItemModifiedAppearanceExtra? itemModifiedAppearanceExtra = null;
         var index = 0;
