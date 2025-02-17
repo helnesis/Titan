@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Titan.Shared;
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
+
+// ref: https://wowdev.wiki/SStrHash
 public static class SStrHash
 {
     private const uint TableSeed = 0x7FED7FED;
@@ -15,13 +17,10 @@ public static class SStrHash
         0xE3061AE7, 0xA39B0FA1, 0x9797F25F, 0xE4444563
     ];
     
-    public static uint Hash(string tableName, bool useCaseConvention = false, uint seed = 0)
+    public static uint Hash(string tableName, bool useCaseConvention = false, uint seed = TableSeed)
     {
         if (string.IsNullOrEmpty(tableName))
             return 0;
-        
-        if (seed == 0)
-            seed = TableSeed;
         
         var shift = 0xEEEEEEEE;
         

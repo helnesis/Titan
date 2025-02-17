@@ -7,7 +7,7 @@ namespace Titan.Persistence.Repositories.Base
     public interface IRepository<T> where T : Entity
     {
         /// <summary>
-        /// Inserts a new entity into the database.
+        /// Inserts or updates an entity in the database on duplicate key.
         /// </summary>
         /// <param name="entity">Entity</param>
         Task<T?> CreateOrUpdateAsync(T entity);
@@ -34,9 +34,8 @@ namespace Titan.Persistence.Repositories.Base
         /// <summary>
         /// Checks if an entity exists in the database.
         /// </summary>
-        /// <param name="entity">Identifier</param>
+        /// <param name="identifier">Entity identifier</param>
         /// <returns>True if the entity exists, otherwise, false.</returns>
         Task<bool> ExistsAsync(Identifier identifier);
-        
     }
 }

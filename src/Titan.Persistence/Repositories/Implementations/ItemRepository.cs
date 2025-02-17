@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using MySqlConnector;
+using Titan.Domain;
 using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Items;
@@ -11,16 +11,8 @@ using Titan.Persistence.Repositories.Interfaces;
 
 namespace Titan.Persistence.Repositories.Implementations;
 
-public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
+public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool pool) : IItemRepository
 {
-    private static readonly Identifier MinItemIdentifier = Identifier.Create(5000000);
-    private async Task<Identifier> NextIdentifier()
-    {
-        await using var connection = provider.GetHotfixesDatabase();
-        var identifier = connection.ExecuteScalar<uint>(ItemQueries.NextIdentifier);
-        
-        return identifier < MinItemIdentifier.Value ? MinItemIdentifier : new Identifier(identifier);
-    }
     
     public async Task<ItemTemplate?> CreateOrUpdateAsync(ItemTemplate entity)
     {
@@ -31,7 +23,7 @@ public sealed class ItemRepository(DatabaseProvider provider) : IItemRepository
         
         await using var transaction = await connection.BeginTransactionAsync();
 
-        var identifier = entity.Identifier == Identifier.Min ? await NextIdentifier() : entity.Identifier;
+        var identifier = entity.Identifier == Identifier.Min ? await pool.NextIdentifierAsync(AssetType.Item) : entity.Identifier;
         
         try
         {

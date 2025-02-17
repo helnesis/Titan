@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Transactions;
 using MySqlConnector;
+using Titan.Domain;
 using Titan.Domain.Builders.Implementations.Creatures;
 using Titan.Domain.Builders.Interfaces.Creatures;
 using Titan.Domain.Entities;
@@ -21,17 +22,8 @@ using Titan.Persistence.Repositories.Interfaces;
 namespace Titan.Persistence.Repositories.Implementations;
 
 
-public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRepository
+public sealed class CreatureRepository(DatabaseProvider provider, IdentifierPool pool) : ICreatureRepository
 {
-    private static readonly Identifier MinOutfitIdentifier = Identifier.Create(3000000000);
-    private static readonly Identifier MinCreatureIdentifier = Identifier.Create(500000);
-    
-    private static async Task<Identifier> NextIdentifier(MySqlConnection connection, MySqlTransaction? transaction = null)
-    {
-        var identifier = await connection.ExecuteScalarAsync<uint>(CreatureQueries.GetNextIdentifier, transaction: transaction);
-        return identifier < MinCreatureIdentifier.Value ? MinCreatureIdentifier : new Identifier(identifier);
-    }
-    
     
     public async Task<CreatureTemplate?> CreateOrUpdateAsync(CreatureTemplate entity)
     {
@@ -41,8 +33,8 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
             await connection.OpenAsync(); // BeginTransaction does not open the connection...
         
         await using var transaction = await connection.BeginTransactionAsync();
-        
-        var creatureEntry = await NextIdentifier(connection, transaction);
+
+        var creatureEntry = await pool.NextIdentifierAsync(AssetType.Creature);
 
         try
         {
@@ -211,15 +203,15 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
         }
     }
 
-    private static async Task InsertAppearance(Identifier identifier, IReadOnlyCollection<CreatureTemplateModel> models, MySqlConnection connection, MySqlTransaction transaction, IReadOnlyCollection<CreatureTemplateOutfits>? outfits = null)
+    private async Task InsertAppearance(Identifier identifier, IReadOnlyCollection<CreatureTemplateModel> models, MySqlConnection connection, MySqlTransaction transaction, IReadOnlyCollection<CreatureTemplateOutfits>? outfits = null)
     {        
         if (outfits is { Count: > 0 })
         {
             foreach (var outfit in outfits.Index())
             {
                 var nextOutfitIdentifier = await connection.ExecuteScalarAsync<uint>(CreatureQueries.GetNextOutfitIdentifier, transaction: transaction);
-                
-                var outfitIdentifier = nextOutfitIdentifier < MinCreatureIdentifier.Value ? MinOutfitIdentifier : new Identifier(nextOutfitIdentifier);
+
+                var outfitIdentifier = await pool.NextIdentifierAsync(AssetType.CreatureOutfits);
                 
                 var outfitParameters = new
                 {
@@ -301,7 +293,7 @@ public sealed class CreatureRepository(DatabaseProvider provider) : ICreatureRep
     {
         throw new NotImplementedException();
     }
-
+    
     public async Task<IReadOnlyCollection<CreatureTemplate>> GetAllAsync()
     {
         await using var connection = provider.GetWorldDatabase();

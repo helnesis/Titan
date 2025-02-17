@@ -1,5 +1,7 @@
 ﻿using System.Data.Common;
 using System.Numerics;
+using Dapper;
+using Titan.Domain.Entities;
 
 namespace Titan.Persistence.Extensions;
 internal static class DbExtensions
@@ -16,7 +18,11 @@ internal static class DbExtensions
         => reader.IsDBNull(ordinal) ? string.Empty : reader.GetString(ordinal);
     public static T GetEnum<T>(this DbDataReader reader, int ordinal) where T : Enum
         => reader.GetFieldValue<T>(ordinal);
-    public static T? GetNumberOrNull<T>(this DbDataReader reader, int ordinal) where T : struct, INumberBase<T>
-        => reader.IsDBNull(ordinal) ? default(T?) : reader.GetFieldValue<T>(ordinal);
 
+    public static async Task<Identifier> GetNextIdentifier(this DbConnection connection, string query, Identifier minPool)
+    {
+        var identifier = await connection.ExecuteScalarAsync<uint>(query);
+        
+        return new Identifier(identifier < minPool.Value ? minPool.Value : identifier);
+    }
 }

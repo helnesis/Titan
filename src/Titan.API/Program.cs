@@ -1,10 +1,11 @@
+using System.Collections.Frozen;
+using System.Globalization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using Serilog;
 using System.Text;
 using System.Text.Json;
-using Dapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Titan.API.Converters;
@@ -14,10 +15,9 @@ using Titan.API.Models.Requests;
 using Titan.API.Services.Identity;
 using Titan.API.Services.Misc;
 using Titan.API.Services.TC;
-using Titan.Domain.Builders.Interfaces.Items;
+using Titan.Domain;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
-using Titan.Domain.Entities.Items;
 using Titan.Persistence;
 using Titan.Persistence.Factories;
 using Titan.Persistence.Factories.Base;
@@ -45,6 +45,17 @@ builder.Services.AddSingleton(new SoapSettings(
     Password: builder.Configuration["GameServer:SoapPassword"] ?? "",
     Host: builder.Configuration["GameServer:Host"] ?? "",
     Port: int.TryParse(builder.Configuration["GameServer:SoapPort"], result: out var port) ? port : 7878));
+
+builder.Services.Configure<IdentifierPoolOptions>(opt =>
+{
+    var cfg = builder.Configuration.GetSection("Pool");
+    opt.Pools = cfg.GetChildren()
+        .Where(x => Enum.TryParse<AssetType>(x.Key, out _) && Identifier.TryParse(x.Value, provider: new NumberFormatInfo(), out _))
+        .ToDictionary(x => Enum.Parse<AssetType>(x.Key), x => Identifier.Parse(x.Value!, provider: new NumberFormatInfo())).ToFrozenDictionary();
+});
+
+// Identifier pool
+builder.Services.AddSingleton<IdentifierPool>();
 
 // Database connection factory
 builder.Services.AddSingleton<IDatabaseConnectionFactory<MySqlConnection>, MySqlDatabaseConnectionFactory>();
@@ -86,6 +97,7 @@ builder.Services.AddResponseCompression(options =>
 });
 
 builder.Services.AddOpenApi();
+
 
 // HttpClient for TrinityCore API
 builder.Services.AddHttpClient("TrinityCore", client =>
