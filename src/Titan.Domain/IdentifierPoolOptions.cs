@@ -9,7 +9,8 @@ public enum AssetType
     Creature,
     CreatureOutfits,
     Item,
-    GameObject
+    GameObject,
+    HotfixData
 }
 
 public sealed class IdentifierPoolOptions

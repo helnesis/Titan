@@ -35,14 +35,14 @@ public sealed record ItemTemplate : Entity
     [JsonConstructor]
     internal ItemTemplate(
         Identifier identifier,
-        Item? itemDefinition,
-        ItemSparse? itemSparse,
-        ItemNameDescription? itemNameDescription,
-        IReadOnlyDictionary<Locale, ItemSparseLocale>? itemSparseLocales,
-        IReadOnlyDictionary<Locale, ItemNameDescriptionLocale>? itemNameDescriptionLocales,
-        ItemAppearance? itemAppearance,
-        ItemModifiedAppearance? itemModifiedAppearance,
-        ItemModifiedAppearanceExtra? itemModifiedAppearanceExtra)
+        Item? definition,
+        ItemSparse? sparse,
+        ItemNameDescription? nameDescription,
+        IReadOnlyDictionary<Locale, ItemSparseLocale>? sparseLocales,
+        IReadOnlyDictionary<Locale, ItemNameDescriptionLocale>? nameDescriptionLocales,
+        ItemAppearance? appearance,
+        ItemModifiedAppearance? modifiedAppearance,
+        ItemModifiedAppearanceExtra? modifiedAppearanceExtra)
         : base(identifier) => (
         Definition,
         Sparse,
@@ -53,14 +53,14 @@ public sealed record ItemTemplate : Entity
         ModifiedAppearance,
         ModifiedAppearanceExtra
     ) = (
-        itemDefinition,
-        itemSparse,
-        itemNameDescription,
-        itemSparseLocales,
-        itemNameDescriptionLocales,
-        itemAppearance,
-        itemModifiedAppearance,
-        itemModifiedAppearanceExtra
+        definition,
+        sparse,
+        nameDescription,
+        sparseLocales,
+        nameDescriptionLocales,
+        appearance,
+        modifiedAppearance,
+        modifiedAppearanceExtra
     );
     
     public static IItemTemplateBuilder Builder => new ItemTemplateBuilder();

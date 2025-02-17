@@ -10,7 +10,8 @@ namespace Titan.Persistence.Repositories.Base
         /// Inserts or updates an entity in the database on duplicate key.
         /// </summary>
         /// <param name="entity">Entity</param>
-        Task<T?> CreateOrUpdateAsync(T entity);
+        /// <param name="update">Is an update?</param>
+        Task<T?> CreateOrUpdateAsync(T entity, bool update = false);
 
         /// <summary>
         /// Retrieves an entity from the database.
@@ -37,5 +38,6 @@ namespace Titan.Persistence.Repositories.Base
         /// <param name="identifier">Entity identifier</param>
         /// <returns>True if the entity exists, otherwise, false.</returns>
         Task<bool> ExistsAsync(Identifier identifier);
+        
     }
 }

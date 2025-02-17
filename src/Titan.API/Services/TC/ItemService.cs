@@ -19,4 +19,10 @@ public sealed class ItemService(IItemRepository itemRepository)
         var itemTemplate = await itemRepository.GetAllAsync();
         return itemTemplate is {Count: > 0} ? TypedResults.Ok(itemTemplate) : TypedResults.NotFound();
     }
+    
+    public async Task<Results<Ok<ItemTemplate>, NotFound>> CreateItem(ItemTemplate template)
+    {
+        var itemTemplate = await itemRepository.CreateOrUpdateAsync(template);
+        return itemTemplate is not null ? TypedResults.Ok(itemTemplate) : TypedResults.NotFound();
+    }
 }

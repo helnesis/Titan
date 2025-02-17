@@ -1,20 +1,23 @@
 using System.Data;
+using System.Transactions;
 using Dapper;
+using MySqlConnector;
 using Titan.Domain;
 using Titan.Domain.Builders.Interfaces.Items;
 using Titan.Domain.Entities;
+using Titan.Domain.Entities.Hotfixes;
 using Titan.Domain.Entities.Items;
 using Titan.Domain.Enums;
 using Titan.Persistence.Extensions;
 using Titan.Persistence.Queries;
 using Titan.Persistence.Repositories.Interfaces;
+using Titan.Shared;
 
 namespace Titan.Persistence.Repositories.Implementations;
 
-public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool pool) : IItemRepository
+public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool pool, IHotfixDataRepository hotfixDataRepository) : IItemRepository
 {
-    
-    public async Task<ItemTemplate?> CreateOrUpdateAsync(ItemTemplate entity)
+    public async Task<ItemTemplate?> CreateOrUpdateAsync(ItemTemplate entity, bool update = false)
     {
         await using var connection = provider.GetHotfixesDatabase();
 
@@ -23,27 +26,218 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await using var transaction = await connection.BeginTransactionAsync();
 
-        var identifier = entity.Identifier == Identifier.Min ? await pool.NextIdentifierAsync(AssetType.Item) : entity.Identifier;
+        var identifier = update ? entity.Identifier : await pool.NextIdentifierAsync(AssetType.Item);
+        
+        var hotfixDataId = await pool.NextIdentifierAsync(AssetType.HotfixData);
+        
         
         try
         {
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItem, new { Identifier = identifier, entity.Definition } );
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemSparse, new { Identifier = identifier, entity.Sparse } );
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemNameDescription, new { Identifier = identifier, entity.NameDescription } );
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemAppearance, new { Identifier = identifier, entity.Appearance } );
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearance, new { Identifier = identifier, entity.ModifiedAppearance } );
-            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearanceExtra, new { Identifier = identifier, entity.ModifiedAppearanceExtra } );
+            if (entity.Definition != null)
+                await InsertOrUpdateItem(identifier, entity.Definition, connection, transaction, hotfixDataId, update);
+            
+            if (entity is { Sparse: not null, Definition: not null })
+                await InsertOrUpdateItemSparseAsync(identifier, entity.Sparse, connection, transaction, hotfixDataId, entity.Definition, update);
+            
+            if (entity.NameDescription != null)
+                await InsertOrUpdateItemNameDescriptionAsync(identifier, entity.NameDescription, connection, transaction, hotfixDataId, update);
+            
+            if (entity.Appearance != null)
+                await InsertOrUpdateItemAppearanceAsync(identifier, entity.Appearance, connection, transaction, hotfixDataId, update);
             
             await transaction.CommitAsync();
         }
-        catch
+        catch(Exception e)
         {
+            Console.WriteLine(e);
             await transaction.RollbackAsync();
         }
         
-        throw new NotImplementedException();
+        return await GetAsync(identifier);
     }
     
+    private async Task InsertOrUpdateItem(Identifier identifier, Item itemDef, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    {
+        var itemParameters = new
+        {
+            Identifier = identifier.Value,
+            itemDef.ClassId,
+            itemDef.SubclassId,
+            itemDef.Material,
+            itemDef.InventoryType,
+            itemDef.SheatheType,
+            itemDef.SoundOverrideSubclassId,
+            itemDef.IconFileDataId,
+            itemDef.ItemGroupSoundsId,
+            itemDef.ContentTuningId,
+            itemDef.ModifiedCraftingReagentItemId,
+            itemDef.CraftingQualityId
+        };
+        
+        await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItem, itemParameters, transaction: transaction);
+        
+        if (!update)
+            await InsertHotfixData(hotfixId, identifier, "Item", connection, transaction); 
+    }
+
+    private async Task InsertOrUpdateItemAppearanceAsync(Identifier identifier, ItemAppearance appearance, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    {
+        var appearanceParameters = new
+        {
+            Identifier = identifier.Value,
+            appearance.DisplayType,
+            appearance.ItemDisplayInfoId,
+            appearance.DefaultIconFileDataId,
+            UiOrder = identifier * 100,
+            appearance.PlayerConditionId
+        };
+        
+        await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemAppearance, appearanceParameters, transaction: transaction);
+
+        var modifiedAppearanceParameters = new
+        {
+            Identifier = identifier.Value,
+            ItemID = identifier.Value,
+            ItemAppearanceID = identifier.Value,
+            OrderIndex = 0,
+            TransmogSourceTypeEnum = 0,
+            Flags = 0,
+            ItemAppearanceModifierID = 0,
+        };
+        
+        await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearance, modifiedAppearanceParameters, transaction: transaction);
+
+        if (!update)
+        {
+            await InsertHotfixData(hotfixId, identifier, "ItemAppearance", connection, transaction);
+            await InsertHotfixData(hotfixId, identifier, "ItemModifiedAppearance", connection, transaction);
+        }
+    }
+    
+    private async Task InsertOrUpdateItemNameDescriptionAsync(Identifier identifier, ItemNameDescription description, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    {
+        var parameters = new
+        {
+            Identifier = identifier.Value,
+            description.Description,
+            description.Color
+        };
+        
+        await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemNameDescription, parameters, transaction: transaction);
+        
+        if (!update)
+            await InsertHotfixData(hotfixId, identifier, "ItemNameDescription", connection, transaction); 
+    }
+    
+    private async Task InsertOrUpdateItemSparseAsync(Identifier identifier, ItemSparse sparse, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, Item itemDef, bool update = false)
+    {
+        var parameters = new
+        {
+            Identifier = identifier.Value,
+            sparse.AllowableRace,
+            sparse.Description,
+            sparse.Display3,
+            sparse.Display2,
+            sparse.Display1,
+            sparse.Display,
+            sparse.ExpansionId,
+            sparse.DmgVariance,
+            sparse.LimitCategory,
+            sparse.DurationInInventory,
+            sparse.QualityModifier,
+            sparse.BagFamily,
+            sparse.StartQuestId,
+            sparse.LanguageId,
+            sparse.ItemRange,
+            sparse.StatPercentageOfSocket1,
+            sparse.StatPercentageOfSocket2,
+            sparse.StatPercentageOfSocket3,
+            sparse.StatPercentageOfSocket4,
+            sparse.StatPercentageOfSocket5,
+            sparse.StatPercentageOfSocket6,
+            sparse.StatPercentageOfSocket7,
+            sparse.StatPercentageOfSocket8,
+            sparse.StatPercentageOfSocket9,
+            sparse.StatPercentageOfSocket10,
+            sparse.StatPercentEditor1,
+            sparse.StatPercentEditor2,
+            sparse.StatPercentEditor3,
+            sparse.StatPercentEditor4,
+            sparse.StatPercentEditor5,
+            sparse.StatPercentEditor6,
+            sparse.StatPercentEditor7,
+            sparse.StatPercentEditor8,
+            sparse.StatPercentEditor9,
+            sparse.StatPercentEditor10,
+            sparse.Stackable,
+            sparse.MaxCount,
+            sparse.MinReputation,
+            sparse.RequiredAbility,
+            sparse.SellPrice,
+            sparse.BuyPrice,
+            sparse.VendorStackCount,
+            sparse.PriceVariance,
+            sparse.PriceRandomValue,
+            sparse.Flags1,
+            sparse.Flags2,
+            sparse.Flags3,
+            sparse.Flags4,
+            sparse.FactionRelated,
+            sparse.ModifiedCraftingReagentItemId,
+            sparse.ContentTuningId,
+            sparse.PlayerLevelToItemLevelCurveId,
+            sparse.ItemNameDescriptionId,
+            sparse.RequiredTransmogHoliday,
+            sparse.RequiredHoliday,
+            sparse.GemProperties,
+            sparse.SocketMatchEnchantmentId,
+            sparse.TotemCategoryId,
+            sparse.InstanceBound,
+            sparse.ZoneBound1,
+            sparse.ZoneBound2,
+            sparse.ItemSet,
+            sparse.LockId,
+            sparse.PageId,
+            sparse.ItemDelay,
+            sparse.MinFactionId,
+            sparse.RequiredSkillRank,
+            sparse.RequiredSkill,
+            sparse.ItemLevel,
+            sparse.AllowableClass,
+            sparse.ArtifactId,
+            sparse.SpellWeight,
+            sparse.SpellWeightCategory,
+            sparse.SocketType1,
+            sparse.SocketType2,
+            sparse.SocketType3,
+            sparse.SheatheType,
+            sparse.Material,
+            sparse.PageMaterialId,
+            sparse.Bonding,
+            sparse.DamageDamageType,
+            sparse.StatModifierBonusStat1,
+            sparse.StatModifierBonusStat2,
+            sparse.StatModifierBonusStat3,
+            sparse.StatModifierBonusStat4,
+            sparse.StatModifierBonusStat5,
+            sparse.StatModifierBonusStat6,
+            sparse.StatModifierBonusStat7,
+            sparse.StatModifierBonusStat8,
+            sparse.StatModifierBonusStat9,
+            sparse.StatModifierBonusStat10,
+            sparse.ContainerSlots,
+            sparse.RequiredPvpMedal,
+            sparse.RequiredPvpRank,
+            sparse.RequiredLevel,
+            itemDef.InventoryType,
+            sparse.OverallQualityId
+        };
+        
+        await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemSparse, parameters, transaction: transaction);
+        
+        if (!update)
+            await InsertHotfixData(hotfixId, identifier, "ItemSparse", connection, transaction); 
+    }
 
     public async Task<ItemTemplate?> GetAsync(Identifier entityIdentifier)
     {
@@ -411,5 +605,12 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         }
         
         return itemModifiedAppearanceExtra;
+    }
+
+    private async Task<HotfixData?> InsertHotfixData(Identifier hotfixDataId, Identifier recordIdentifier, string tableName, IDbConnection connection, IDbTransaction transaction)
+    {
+        var hotfixEntry = new HotfixData(hotfixDataId, recordIdentifier, SStrHash.Hash(tableName), recordIdentifier, HotfixStatus.Valid);
+        
+        return await hotfixDataRepository.CreateOrUpdateAsync(hotfixEntry, connection, transaction);
     }
 }

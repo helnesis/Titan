@@ -25,7 +25,7 @@ namespace Titan.Persistence.Repositories.Implementations;
 public sealed class CreatureRepository(DatabaseProvider provider, IdentifierPool pool) : ICreatureRepository
 {
     
-    public async Task<CreatureTemplate?> CreateOrUpdateAsync(CreatureTemplate entity)
+    public async Task<CreatureTemplate?> CreateOrUpdateAsync(CreatureTemplate entity, bool update = false)
     {
         await using var connection = provider.GetWorldDatabase();
 

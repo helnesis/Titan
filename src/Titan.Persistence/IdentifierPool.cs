@@ -29,6 +29,8 @@ public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, Data
         
         AssetType.Item => provider.GetHotfixesDatabase(),
         
+        AssetType.HotfixData => provider.GetHotfixesDatabase(),
+        
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
     
@@ -39,6 +41,8 @@ public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, Data
         AssetType.CreatureOutfits => CreatureQueries.GetNextOutfitIdentifier,
         
         AssetType.Item => ItemQueries.NextIdentifier,
+        
+        AssetType.HotfixData => HotfixQueries.GetNextHotfixId,
         
         AssetType.GameObject => "",
         

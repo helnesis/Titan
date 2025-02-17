@@ -18,6 +18,7 @@ using Titan.API.Services.TC;
 using Titan.Domain;
 using Titan.Domain.Entities;
 using Titan.Domain.Entities.Creatures;
+using Titan.Domain.Entities.Items;
 using Titan.Persistence;
 using Titan.Persistence.Factories;
 using Titan.Persistence.Factories.Base;
@@ -66,6 +67,7 @@ builder.Services.AddSingleton<DatabaseProvider>();
 // Repositories
 builder.Services.AddScoped<ICreatureRepository, CreatureRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IHotfixDataRepository, HotfixDataRepository>();
 
 // SOAP client
 builder.Services.AddScoped<TrinitySoap>();
@@ -206,6 +208,10 @@ app.MapGet("/api/item/{identifier}", async (Identifier identifier, [FromServices
 
 app.MapGet("/api/item/", async ([FromServices] ItemService itemService)
     => await itemService.GetAllItems())
+    .AllowAnonymous();
+
+app.MapPost("/api/item/", async ([FromBody] ItemTemplate item, [FromServices] ItemService itemService)
+        => await itemService.CreateItem(item))
     .AllowAnonymous();
 
 // Gameobject endpoints
