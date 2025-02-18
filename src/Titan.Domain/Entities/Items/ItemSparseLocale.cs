@@ -11,7 +11,7 @@ public sealed record ItemSparseLocale : Entity
     [JsonConstructor]
     internal ItemSparseLocale(
         Identifier identifier,
-        Locale locale,
+        string? locale,
         string? descriptionLang,
         string? display3Lang,
         string? display2Lang,
@@ -33,7 +33,7 @@ public sealed record ItemSparseLocale : Entity
     
     
     [JsonPropertyName("locale")]
-    public Locale Locale { get; init; }
+    public string? Locale { get; init; }
 
     [JsonPropertyName("descriptionLang")]
     public string? DescriptionLang { get; init; }

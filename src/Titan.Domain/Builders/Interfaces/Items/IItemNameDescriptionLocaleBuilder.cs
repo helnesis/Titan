@@ -8,6 +8,6 @@ namespace Titan.Domain.Builders.Interfaces.Items;
 public interface IItemNameDescriptionLocaleBuilder : IBuilder<ItemNameDescriptionLocale>
 {
     IItemNameDescriptionLocaleBuilder WithIdentifier(Identifier identifier);
-    IItemNameDescriptionLocaleBuilder WithLocale(Locale locale);
+    IItemNameDescriptionLocaleBuilder WithLocale(string locale);
     IItemNameDescriptionLocaleBuilder WithDescriptionLang(string? descriptionLang);
 }

@@ -9,7 +9,6 @@ using Titan.Persistence.Queries;
 namespace Titan.Persistence;
 
 
-
 // @TODO: Thread safety (Lock object)
 public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, DatabaseProvider provider)
 {
@@ -29,6 +28,8 @@ public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, Data
         
         AssetType.Item => provider.GetHotfixesDatabase(),
         
+        AssetType.ItemNameDescription => provider.GetHotfixesDatabase(),
+        
         AssetType.HotfixData => provider.GetHotfixesDatabase(),
         
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
@@ -42,9 +43,11 @@ public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, Data
         
         AssetType.Item => ItemQueries.NextIdentifier,
         
-        AssetType.HotfixData => HotfixQueries.GetNextHotfixId,
+        AssetType.ItemNameDescription => ItemQueries.GetNextItemNameDescriptionId,
         
         AssetType.GameObject => "",
+        
+        AssetType.HotfixData => HotfixQueries.GetNextHotfixId,
         
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };

@@ -9,7 +9,7 @@ public interface IItemSparseLocaleBuilder : IBuilder<ItemSparseLocale>
 {
     IItemSparseLocaleBuilder WithIdentifier(Identifier identifier);
     
-    IItemSparseLocaleBuilder WithLocale(Locale locale);
+    IItemSparseLocaleBuilder WithLocale(string locale);
 
     IItemSparseLocaleBuilder WithDescriptionLang(string? descriptionLang);
 

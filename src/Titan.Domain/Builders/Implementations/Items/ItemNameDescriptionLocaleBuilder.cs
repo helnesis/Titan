@@ -9,7 +9,7 @@ public sealed class ItemNameDescriptionLocaleBuilder : IItemNameDescriptionLocal
 {
     public Identifier Identifier { get; private set;}
     private string? _descriptionLang;
-    private Locale _locale;
+    private string? _locale;
 
     public IItemNameDescriptionLocaleBuilder WithIdentifier(Identifier identifier)
     {
@@ -17,7 +17,7 @@ public sealed class ItemNameDescriptionLocaleBuilder : IItemNameDescriptionLocal
         return this;
     }
 
-    public IItemNameDescriptionLocaleBuilder WithLocale(Locale locale)
+    public IItemNameDescriptionLocaleBuilder WithLocale(string locale)
     {
         _locale = locale;
         return this;

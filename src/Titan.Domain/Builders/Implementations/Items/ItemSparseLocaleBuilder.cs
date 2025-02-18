@@ -8,14 +8,14 @@ namespace Titan.Domain.Builders.Implementations.Items;
 public sealed class ItemSparseLocaleBuilder : IItemSparseLocaleBuilder
 {
     public Identifier Identifier { get; private set;}
-    private Locale _locale;
+    private string? _locale;
     private string? _descriptionLang;
     private string? _display3Lang;
     private string? _display2Lang;
     private string? _display1Lang;
     private string? _displayLang;
 
-    public IItemSparseLocaleBuilder WithLocale(Locale locale)
+    public IItemSparseLocaleBuilder WithLocale(string locale)
     {
         _locale = locale;
         return this;

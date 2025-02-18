@@ -11,7 +11,7 @@ public sealed record ItemNameDescriptionLocale : Entity
     [JsonConstructor]
     internal ItemNameDescriptionLocale(
         Identifier identifier,
-        Locale locale,
+        string? locale,
         string? descriptionLang)
         : base(identifier) => (
         Locale,
@@ -22,7 +22,7 @@ public sealed record ItemNameDescriptionLocale : Entity
     );
 
     [JsonPropertyName("locale")]
-    public Locale Locale { get; init; }
+    public string? Locale { get; init; }
 
     [JsonPropertyName("descriptionLang")]
     public string? DescriptionLang { get; init; }

@@ -27,23 +27,34 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         await using var transaction = await connection.BeginTransactionAsync();
 
         var identifier = update ? entity.Identifier : await pool.NextIdentifierAsync(AssetType.Item);
-        
-        var hotfixDataId = await pool.NextIdentifierAsync(AssetType.HotfixData);
+        var hotfixDataId = update ? 0 : await pool.NextIdentifierAsync(AssetType.HotfixData);
+        var itemDescriptionId = entity.NameDescription is not null ? await pool.NextIdentifierAsync(AssetType.ItemNameDescription) : 0;
         
         
         try
         {
-            if (entity.Definition != null)
+            if (entity.Definition is not  null)
                 await InsertOrUpdateItem(identifier, entity.Definition, connection, transaction, hotfixDataId, update);
+
+            if (entity.Sparse is not null)
+            {
+                await InsertOrUpdateItemSparseAsync(identifier, entity.Sparse, connection, transaction, hotfixDataId, itemDescriptionId, update);
+                
+                if (entity.SparseLocales is not null)
+                    await InsertOrUpdateItemSparseLocaleAsync(identifier, entity.SparseLocales, connection, transaction);
+            }
+
+            if (entity.NameDescription is not null)
+            {
+                await InsertOrUpdateItemNameDescriptionAsync(itemDescriptionId, entity.NameDescription, connection, transaction, hotfixDataId, update);
+                
+                if (entity.NameDescriptionLocales is not null)
+                    await InsertOrUpdateItemNameDescriptionLocaleAsync(itemDescriptionId, entity.NameDescriptionLocales, connection, transaction);
+            }
             
-            if (entity is { Sparse: not null, Definition: not null })
-                await InsertOrUpdateItemSparseAsync(identifier, entity.Sparse, connection, transaction, hotfixDataId, entity.Definition, update);
-            
-            if (entity.NameDescription != null)
-                await InsertOrUpdateItemNameDescriptionAsync(identifier, entity.NameDescription, connection, transaction, hotfixDataId, update);
-            
-            if (entity.Appearance != null)
+            if (entity.Appearance is not null)
                 await InsertOrUpdateItemAppearanceAsync(identifier, entity.Appearance, connection, transaction, hotfixDataId, update);
+            
             
             await transaction.CommitAsync();
         }
@@ -54,6 +65,42 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         }
         
         return await GetAsync(identifier);
+    }
+
+    private static async Task InsertOrUpdateItemNameDescriptionLocaleAsync(Identifier identifier,
+        IReadOnlyDictionary<Locale, ItemNameDescriptionLocale> locales, MySqlConnection connection, MySqlTransaction transaction)
+    {
+        foreach (var locale in locales)
+        {
+            var parameters = new
+            {
+                Identifier = identifier.Value,
+                locale.Value.Locale,
+                locale.Value.DescriptionLang
+            };
+            
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemNameDescriptionLocale, parameters, transaction: transaction);
+        }
+    }
+    private static async Task InsertOrUpdateItemSparseLocaleAsync(Identifier identifier,
+        IReadOnlyDictionary<Locale, ItemSparseLocale> locales, MySqlConnection connection, MySqlTransaction transaction)
+    {
+        foreach (var locale in locales)
+        {
+            
+            var parameters = new
+            {
+                Identifier = identifier.Value,
+                Locale = locale.Key.ToString(),
+                locale.Value.DescriptionLang,
+                locale.Value.DisplayLang,
+                locale.Value.Display1Lang,
+                locale.Value.Display2Lang,
+                locale.Value.Display3Lang
+            };
+            
+            await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemSparseLocale, parameters, transaction: transaction);
+        }
     }
     
     private async Task InsertOrUpdateItem(Identifier identifier, Item itemDef, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
@@ -129,7 +176,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
             await InsertHotfixData(hotfixId, identifier, "ItemNameDescription", connection, transaction); 
     }
     
-    private async Task InsertOrUpdateItemSparseAsync(Identifier identifier, ItemSparse sparse, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, Item itemDef, bool update = false)
+    private async Task InsertOrUpdateItemSparseAsync(Identifier identifier, ItemSparse sparse, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, Identifier itemNameDescriptionId, bool update = false)
     {
         var parameters = new
         {
@@ -186,7 +233,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
             sparse.ModifiedCraftingReagentItemId,
             sparse.ContentTuningId,
             sparse.PlayerLevelToItemLevelCurveId,
-            sparse.ItemNameDescriptionId,
+            ItemNameDescriptionId = itemNameDescriptionId == 0 ? sparse.ItemNameDescriptionId : itemNameDescriptionId.Value,
             sparse.RequiredTransmogHoliday,
             sparse.RequiredHoliday,
             sparse.GemProperties,
@@ -229,7 +276,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
             sparse.RequiredPvpMedal,
             sparse.RequiredPvpRank,
             sparse.RequiredLevel,
-            itemDef.InventoryType,
+            sparse.InventoryType,
             sparse.OverallQualityId
         };
         
@@ -493,7 +540,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
                 var locale = (Locale) i;
                 var itemSparseLocale = ItemSparseLocale.Builder
                     .WithIdentifier(reader.GetUInt32(index++))
-                    .WithLocale(locale)
+                    .WithLocale(reader.GetString(index++))
                     .WithDescriptionLang(reader.GetStringOrDefault(index++))
                     .WithDisplayLang(reader.GetStringOrDefault(index++))
                     .WithDisplay1Lang(reader.GetStringOrDefault(index++))
@@ -525,7 +572,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
                 var locale = (Locale) i;
                 var itemSparseLocale = ItemNameDescriptionLocale.Builder
                     .WithIdentifier(reader.GetUInt32(index++))
-                    .WithLocale(locale)
+                    .WithLocale(reader.GetString(index++))
                     .WithDescriptionLang(reader.GetStringOrDefault(index++))
                     .Build();
                 

@@ -88,7 +88,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     /// The result contains either an <see cref="Ok{T}"/> result with a collection of <see cref="CreatureTemplate"/>
     /// if found, or a <see cref="NotFound"/> result if no creatures exist.
     /// </returns>
-    public async Task<Results<Ok<IReadOnlyCollection<CreatureTemplate>>, NotFound>> GetCreatureByName(string filter, Locale locale = Locale.EnGb)
+    public async Task<Results<Ok<IReadOnlyCollection<CreatureTemplate>>, NotFound>> GetCreatureByName(string filter, Locale locale = Locale.enGB)
     {
         var creatures = await creatureRepository.GetByName(filter);
 
@@ -103,7 +103,7 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     /// <returns>A task that represents the asynchronous operation.
     /// The result contains either an <see cref="Ok{T}"/> result with a collection of <see cref="CreatureLookup"/>
     /// </returns>
-    public async Task<Results<Ok<IReadOnlyCollection<CreatureLookup>>, NotFound>> GetCreatureList(Locale locale = Locale.FrFr)
+    public async Task<Results<Ok<IReadOnlyCollection<CreatureLookup>>, NotFound>> GetCreatureList(Locale locale = Locale.frFR)
     {
         var creatureList = await creatureRepository.GetCreaturesLookupAsync(locale);
         

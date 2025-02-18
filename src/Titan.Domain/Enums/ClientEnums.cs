@@ -1,52 +1,54 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Titan.Domain.Enums;
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 [JsonConverter(typeof(JsonStringEnumConverter<Locale>))]
 public enum Locale : byte
 {
     [JsonPropertyName("enUS")]
-    EnUs = 0,
+    enUS = 0,
     
     [JsonPropertyName("enUS")]
-    EnGb = EnUs,
+    enGB = enUS,
     
     [JsonPropertyName("koKR")]
-    KoKr = 1,
+    koKR = 1,
     
     [JsonPropertyName("frFR")]
-    FrFr = 2,
+    frFR = 2,
     
     [JsonPropertyName("deDE")]
-    DeDe = 3,
+    deDE = 3,
     
     [JsonPropertyName("enCN")]
-    EnCn = 4,
+    enCN = 4,
     
     [JsonPropertyName("zhCN")]
-    ZhCn = EnCn,
+    zhCN = enCN,
     
     [JsonPropertyName("enTW")]
-    EnTw = 5,
+    enTW = 5,
     
     [JsonPropertyName("zhTW")]
-    ZhTw = EnTw,
+    zhTW = enTW,
     
     [JsonPropertyName("esES")]
-    EsEs = 6,
+    esES = 6,
     
     [JsonPropertyName("esMX")]
-    EsMx = 7,
+    esMX = 7,
     
     [JsonPropertyName("ruRU")]
-    RuRu = 8,
+    ruRU = 8,
     
     [JsonPropertyName("ptPT")]
-    PtPt = 10,
+    ptPT = 10,
     
     [JsonPropertyName("ptBR")]
-    PtBr = PtPt,
+    ptBR = ptPT,
     
     [JsonPropertyName("itIT")]
-    ItIt = 11,
+    itIT = 11,
 }

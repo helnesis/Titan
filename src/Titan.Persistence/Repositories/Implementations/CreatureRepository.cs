@@ -691,17 +691,17 @@ public sealed class CreatureRepository(DatabaseProvider provider, IdentifierPool
     {
         var localeStr = locale switch
         {
-            Locale.EnUs => "enUS",
-            Locale.KoKr => "koKR",
-            Locale.FrFr => "frFR",
-            Locale.DeDe => "deDE",
-            Locale.EnCn => "enCN",
-            Locale.EnTw => "enTW",
-            Locale.EsEs => "esES",
-            Locale.EsMx => "esMX",
-            Locale.RuRu => "ruRU",
-            Locale.PtPt => "ptPT",
-            Locale.ItIt => "itIT",
+            Locale.enUS => "enUS",
+            Locale.koKR => "koKR",
+            Locale.frFR => "frFR",
+            Locale.deDE => "deDE",
+            Locale.enCN => "enCN",
+            Locale.enTW => "enTW",
+            Locale.esES => "esES",
+            Locale.esMX => "esMX",
+            Locale.ruRU => "ruRU",
+            Locale.ptPT => "ptPT",
+            Locale.itIT => "itIT",
             
             _ => throw new ArgumentOutOfRangeException(nameof(locale), locale, null)
         };
