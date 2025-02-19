@@ -26,34 +26,35 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await using var transaction = await connection.BeginTransactionAsync();
 
-        var identifier = update ? entity.Identifier : await pool.NextIdentifierAsync(AssetType.Item);
-        var hotfixDataId = update ? 0 : await pool.NextIdentifierAsync(AssetType.HotfixData);
-        var itemDescriptionId = entity.NameDescription is not null ? await pool.NextIdentifierAsync(AssetType.ItemNameDescription) : 0;
+        var itemId = update ? entity.Identifier : await pool.NextIdentifierAsync(AssetType.Item);
         
+        Identifier? hotfixDataId = update ? null : await pool.NextIdentifierAsync(AssetType.HotfixData);
+        
+        Identifier? itemDescriptionId = entity.NameDescription is null ? null : await pool.NextIdentifierAsync(AssetType.ItemNameDescription);
         
         try
         {
             if (entity.Definition is not  null)
-                await InsertOrUpdateItem(identifier, entity.Definition, connection, transaction, hotfixDataId, update);
+                await InsertOrUpdateItem(itemId, entity.Definition, connection, transaction, hotfixDataId);
 
             if (entity.Sparse is not null)
             {
-                await InsertOrUpdateItemSparseAsync(identifier, entity.Sparse, connection, transaction, hotfixDataId, itemDescriptionId, update);
+                await InsertOrUpdateItemSparseAsync(itemId, entity.Sparse, connection, transaction, hotfixDataId, itemDescriptionId);
                 
                 if (entity.SparseLocales is not null)
-                    await InsertOrUpdateItemSparseLocaleAsync(identifier, entity.SparseLocales, connection, transaction);
+                    await InsertOrUpdateItemSparseLocaleAsync(itemId, entity.SparseLocales, connection, transaction);
             }
 
             if (entity.NameDescription is not null)
             {
-                await InsertOrUpdateItemNameDescriptionAsync(itemDescriptionId, entity.NameDescription, connection, transaction, hotfixDataId, update);
+                await InsertOrUpdateItemNameDescriptionAsync(itemDescriptionId!.Value, entity.NameDescription, connection, transaction, hotfixDataId);
                 
                 if (entity.NameDescriptionLocales is not null)
-                    await InsertOrUpdateItemNameDescriptionLocaleAsync(itemDescriptionId, entity.NameDescriptionLocales, connection, transaction);
+                    await InsertOrUpdateItemNameDescriptionLocaleAsync(itemDescriptionId.Value, entity.NameDescriptionLocales, connection, transaction);
             }
             
             if (entity.Appearance is not null)
-                await InsertOrUpdateItemAppearanceAsync(identifier, entity.Appearance, connection, transaction, hotfixDataId, update);
+                await InsertOrUpdateItemAppearanceAsync(itemId, entity.Appearance, connection, transaction, hotfixDataId);
             
             
             await transaction.CommitAsync();
@@ -64,7 +65,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
             await transaction.RollbackAsync();
         }
         
-        return await GetAsync(identifier);
+        return await GetAsync(itemId);
     }
 
     private static async Task InsertOrUpdateItemNameDescriptionLocaleAsync(Identifier identifier,
@@ -87,7 +88,6 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
     {
         foreach (var locale in locales)
         {
-            
             var parameters = new
             {
                 Identifier = identifier.Value,
@@ -103,7 +103,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         }
     }
     
-    private async Task InsertOrUpdateItem(Identifier identifier, Item itemDef, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    private async Task InsertOrUpdateItem(Identifier identifier, Item itemDef, MySqlConnection connection, MySqlTransaction transaction, Identifier? hotfixId)
     {
         var itemParameters = new
         {
@@ -123,11 +123,11 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItem, itemParameters, transaction: transaction);
         
-        if (!update)
-            await InsertHotfixData(hotfixId, identifier, "Item", connection, transaction); 
+        if (hotfixId is not null)
+            await InsertHotfixData(hotfixId.Value, identifier, "Item", connection, transaction); 
     }
 
-    private async Task InsertOrUpdateItemAppearanceAsync(Identifier identifier, ItemAppearance appearance, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    private async Task InsertOrUpdateItemAppearanceAsync(Identifier identifier, ItemAppearance appearance, MySqlConnection connection, MySqlTransaction transaction, Identifier? hotfixId)
     {
         var appearanceParameters = new
         {
@@ -154,14 +154,14 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemModifiedAppearance, modifiedAppearanceParameters, transaction: transaction);
 
-        if (!update)
+        if (hotfixId is not null)
         {
-            await InsertHotfixData(hotfixId, identifier, "ItemAppearance", connection, transaction);
-            await InsertHotfixData(hotfixId, identifier, "ItemModifiedAppearance", connection, transaction);
+            await InsertHotfixData(hotfixId.Value, identifier, "ItemAppearance", connection, transaction);
+            await InsertHotfixData(hotfixId.Value, identifier, "ItemModifiedAppearance", connection, transaction);
         }
     }
     
-    private async Task InsertOrUpdateItemNameDescriptionAsync(Identifier identifier, ItemNameDescription description, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, bool update = false)
+    private async Task InsertOrUpdateItemNameDescriptionAsync(Identifier identifier, ItemNameDescription description, MySqlConnection connection, MySqlTransaction transaction, Identifier? hotfixId)
     {
         var parameters = new
         {
@@ -172,11 +172,11 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemNameDescription, parameters, transaction: transaction);
         
-        if (!update)
-            await InsertHotfixData(hotfixId, identifier, "ItemNameDescription", connection, transaction); 
+        if (hotfixId is not null)
+            await InsertHotfixData(hotfixId.Value, identifier, "ItemNameDescription", connection, transaction); 
     }
     
-    private async Task InsertOrUpdateItemSparseAsync(Identifier identifier, ItemSparse sparse, MySqlConnection connection, MySqlTransaction transaction, Identifier hotfixId, Identifier itemNameDescriptionId, bool update = false)
+    private async Task InsertOrUpdateItemSparseAsync(Identifier identifier, ItemSparse sparse, MySqlConnection connection, MySqlTransaction transaction, Identifier? hotfixId, Identifier? itemNameDescriptionId)
     {
         var parameters = new
         {
@@ -233,7 +233,7 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
             sparse.ModifiedCraftingReagentItemId,
             sparse.ContentTuningId,
             sparse.PlayerLevelToItemLevelCurveId,
-            ItemNameDescriptionId = itemNameDescriptionId == 0 ? sparse.ItemNameDescriptionId : itemNameDescriptionId.Value,
+            ItemNameDescriptionId = itemNameDescriptionId?.Value ?? sparse.ItemNameDescriptionId,
             sparse.RequiredTransmogHoliday,
             sparse.RequiredHoliday,
             sparse.GemProperties,
@@ -282,8 +282,8 @@ public sealed class ItemRepository(DatabaseProvider provider, IdentifierPool poo
         
         await connection.ExecuteAsync(ItemQueries.InsertOrUpdateItemSparse, parameters, transaction: transaction);
         
-        if (!update)
-            await InsertHotfixData(hotfixId, identifier, "ItemSparse", connection, transaction); 
+        if (hotfixId is not null)
+            await InsertHotfixData(hotfixId.Value, identifier, "ItemSparse", connection, transaction); 
     }
 
     public async Task<ItemTemplate?> GetAsync(Identifier entityIdentifier)
