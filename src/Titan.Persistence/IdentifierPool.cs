@@ -18,6 +18,7 @@ public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, Data
         await using var connection = GetConnectionByType(assetType);
         return await connection.GetNextIdentifier(GetQueryByType(assetType), _pools[assetType]);
     }
+    
     private MySqlConnection GetConnectionByType(AssetType type) => type switch
     {
         AssetType.Creature => provider.GetWorldDatabase(),

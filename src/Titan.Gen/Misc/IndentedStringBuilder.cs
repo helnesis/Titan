@@ -1,11 +1,13 @@
 using System.Text;
-using Titan.DatabaseGenerator.Extensions;
+using Titan.Gen.Extensions;
 
-namespace Titan.DatabaseGenerator;
+namespace Titan.Gen;
 
 public class IndentedStringBuilder(int spaces = 0)
 {
         private int Spaces { get; set; } = spaces;
+        
+        public int Length => Builder.Length;
         private StringBuilder Builder { get; } = new();
         
         public IndentedStringBuilder AppendLine()
@@ -51,6 +53,11 @@ public class IndentedStringBuilder(int spaces = 0)
             return this;
         }
 
+        public IndentedStringBuilder Remove(int startIndex, int length)
+        {
+            Builder.Remove(startIndex, length);
+            return this;
+        }
         public IndentedStringBuilder AppendLine(string text)
         {
             var indent = new string(' ', Spaces);

@@ -1,4 +1,4 @@
-namespace Titan.DatabaseGenerator;
+namespace Titan.Gen;
 
 public sealed class MySqlConverter
 {

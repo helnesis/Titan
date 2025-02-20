@@ -1,9 +1,9 @@
 
 using Dapper;
 using Humanizer;
-using Titan.DatabaseGenerator.Misc;
+using Titan.Gen.Misc;
 
-namespace Titan.DatabaseGenerator.Generators;
+namespace Titan.Gen.Generators;
 
 public enum EntityType
 {
@@ -14,7 +14,7 @@ public enum EntityType
 
 public sealed class EntityGenerator(DatabaseProvider provider)
 {
-    public async Task<Dictionary<EntityType, string>> GenerateEntity(string entityName, DB dbType)
+    public async Task<Dictionary<EntityType, string>> GenerateEntity(string entityName, DatabaseType databaseTypeType)
     {
         var sources = new Dictionary<EntityType, string>();
         
@@ -22,12 +22,12 @@ public sealed class EntityGenerator(DatabaseProvider provider)
         
         var pascalizedEntityName = entityName.Pascalize();
         
-        await using var connection = dbType switch {
-            DB.Auth => provider.GetAuthDatabase(),
-            DB.Characters => provider.GetCharacterDatabase(),
-            DB.World => provider.GetWorldDatabase(),
-            DB.Hotfixes => provider.GetHotfixesDatabase(),
-            _ => throw new ArgumentOutOfRangeException(nameof(dbType), dbType, null)
+        await using var connection = databaseTypeType switch {
+            DatabaseType.Auth => provider.GetAuthDatabase(),
+            DatabaseType.Characters => provider.GetCharacterDatabase(),
+            DatabaseType.World => provider.GetWorldDatabase(),
+            DatabaseType.Hotfixes => provider.GetHotfixesDatabase(),
+            _ => throw new ArgumentOutOfRangeException(nameof(databaseTypeType), databaseTypeType, null)
         };
         
         await using var data = await connection.ExecuteReaderAsync($"DESCRIBE {entityName}");

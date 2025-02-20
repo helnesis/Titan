@@ -1,26 +1,26 @@
 using System.Text;
 using Dapper;
 using Humanizer;
-using Titan.DatabaseGenerator.Misc;
+using Titan.Gen.Misc;
 
-namespace Titan.DatabaseGenerator.Generators;
+namespace Titan.Gen.Generators;
 
 public enum QueryType { SelectAll, SelectById, InsertOrUpdate, Delete }
 
 public sealed class QueryGenerator(DatabaseProvider provider)
 {
-    public async Task<string> GenerateQueries(string fileName, string entity, DB dbType)
+    public async Task<string> GenerateQueries(string fileName, string entity, DatabaseType databaseTypeType)
     {
         var indentedStringBuilder = new IndentedStringBuilder();
         var entityNamePascalized = entity.Pascalize();
         var queries = new Dictionary<QueryType, Dictionary<string, string>>();
         
-        await using var connection = dbType switch {
-            DB.Auth => provider.GetAuthDatabase(),
-            DB.Characters => provider.GetCharacterDatabase(),
-            DB.World => provider.GetWorldDatabase(),
-            DB.Hotfixes => provider.GetHotfixesDatabase(),
-            _ => throw new ArgumentOutOfRangeException(nameof(dbType), dbType, null)
+        await using var connection = databaseTypeType switch {
+            DatabaseType.Auth => provider.GetAuthDatabase(),
+            DatabaseType.Characters => provider.GetCharacterDatabase(),
+            DatabaseType.World => provider.GetWorldDatabase(),
+            DatabaseType.Hotfixes => provider.GetHotfixesDatabase(),
+            _ => throw new ArgumentOutOfRangeException(nameof(databaseTypeType), databaseTypeType, null)
         };
 
         await using var reader = await connection.ExecuteReaderAsync($"DESCRIBE {entity}");

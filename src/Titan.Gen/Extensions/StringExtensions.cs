@@ -1,4 +1,4 @@
-namespace Titan.DatabaseGenerator.Extensions;
+namespace Titan.Gen.Extensions;
 
 public static class StringExtensions
 {

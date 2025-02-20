@@ -12,6 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DBCD" Version="2.1.2" />
+      <PackageReference Include="DBDefsLib" Version="1.0.0.20" />
       <PackageReference Include="Humanizer" Version="3.0.0-beta.54" />
       <PackageReference Include="Microsoft.CodeAnalysis" Version="4.12.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
