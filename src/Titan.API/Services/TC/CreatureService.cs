@@ -23,7 +23,6 @@ public sealed class CreatureService(ICreatureRepository creatureRepository)
     public async Task<Results<Ok<CreatureTemplate>, NotFound>> GetCreatureByIdentifier(Identifier identifier)
     {
         var creature = await creatureRepository.GetAsync(identifier);
-        
         return creature is null ? TypedResults.NotFound() : TypedResults.Ok(creature);
     }
     

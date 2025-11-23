@@ -26,8 +26,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
     
     private readonly JsonSerializerOptions _serializerOptions =
         new() { Converters = { new AuthenticationStateJsonConverter() } };
-
-
+    
 
     private static HttpRequestMessage CreateRequest(string httpEndpoint, string gameToken, HttpMethod httpMethod)
     {

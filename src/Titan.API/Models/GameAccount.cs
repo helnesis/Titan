@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 namespace Titan.API.Models;
 
 [method: JsonConstructor]
-public record GameAccountInfo(
+public sealed record GameAccountInfo(
     [property: JsonPropertyName("display_name")] 
     string DisplayName,
     [property: JsonPropertyName("expansion")]

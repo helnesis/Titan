@@ -13,8 +13,6 @@ public class JwtParser
     {
         return ctx.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Name)?.Value;
     }
-    
-    
     /// <summary>
     /// Returns the game token through the claims of the JWT (Json Web Token)
     /// </summary>

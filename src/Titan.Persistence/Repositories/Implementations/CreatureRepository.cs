@@ -28,7 +28,7 @@ public sealed class CreatureRepository(DatabaseProvider provider, IdentifierPool
     public async Task<CreatureTemplate?> CreateOrUpdateAsync(CreatureTemplate entity, bool update = false)
     {
         await using var connection = provider.GetWorldDatabase();
-
+        
         if (connection.State != ConnectionState.Open)
             await connection.OpenAsync(); // BeginTransaction does not open the connection...
         
@@ -345,7 +345,7 @@ public sealed class CreatureRepository(DatabaseProvider provider, IdentifierPool
         
         await AddExtraDataAsync(builders);
 
-        return builders.Select(b => b.Build()).ToImmutableArray();
+        return [..builders.Select(b => b.Build())];
     }
 
     public async Task<CreatureTemplate?> GetAsync(Identifier entityIdentifier)

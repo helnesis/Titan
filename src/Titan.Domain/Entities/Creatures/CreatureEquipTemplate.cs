@@ -7,7 +7,6 @@ namespace Titan.Domain.Entities.Creatures;
 
 public sealed record CreatureEquipTemplate : Entity
 {
-    
     [JsonPropertyName("id")]
     public uint Id { get; init; }
 

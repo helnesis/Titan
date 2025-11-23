@@ -23,7 +23,7 @@ namespace Titan.API.Helpers
 
         public ProblemBuilder WithStatusCode(int statusCode)
         {
-            if (!(statusCode >= 400 && statusCode <= 599))
+            if (statusCode is < 400 or > 599)
                 _status = StatusCodes.Status500InternalServerError;
 
             _status = statusCode;
@@ -38,7 +38,7 @@ namespace Titan.API.Helpers
 
         public ProblemBuilder WithDetails(string details)
         {
-            _details = details;
+             _details = details;
             return this;
         }
         public ProblemBuilder WithInstance(string instance)
