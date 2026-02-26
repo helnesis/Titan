@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="src/Titan.API/Titan.API.csproj" />
+  <Project Path="src/Titan.Domain/Titan.Domain.csproj" />
+  <Project Path="src/Titan.Gen/Titan.Gen.csproj" />
+  <Project Path="src/Titan.Persistence/Titan.Persistence.csproj" />
+  <Project Path="src/Titan.Shared/Titan.Shared.csproj" />
+  <Project Path="src/Titan.SOAP/Titan.SOAP.csproj" />
+  <Project Path="src/Titan.Tests/Titan.Tests.csproj" />
+</Solution>
