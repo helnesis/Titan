@@ -8,15 +8,19 @@ using Titan.Persistence.Queries;
 
 namespace Titan.Persistence;
 
-
-// @TODO: Thread safety (Lock object)
 public sealed class IdentifierPool(IOptions<IdentifierPoolOptions> options, DatabaseProvider provider)
 {
     private readonly FrozenDictionary<AssetType, Identifier> _pools = options.Value.Pools;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
     public async Task<Identifier> NextIdentifierAsync(AssetType assetType)
     {
-        await using var connection = GetConnectionByType(assetType);
-        return await connection.GetNextIdentifier(GetQueryByType(assetType), _pools[assetType]);
+        await _semaphore.WaitAsync();
+        try
+        {
+            await using var connection = GetConnectionByType(assetType);
+            return await connection.GetNextIdentifier(GetQueryByType(assetType), _pools[assetType]);
+        }
+        finally  {  _semaphore.Release(); }
     }
     
     private MySqlConnection GetConnectionByType(AssetType type) => type switch

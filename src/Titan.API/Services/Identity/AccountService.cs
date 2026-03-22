@@ -16,13 +16,13 @@ namespace Titan.API.Services.Identity;
 
 public sealed class AccountService(IConfiguration configuration, RsaService rsaService, TrinitySoap soapClient, IHttpClientFactory httpClient)
 {
-    private const string GetGameAccountsEndpoint = "/bnetserver/gameAccounts/";
+    private const string GameAccountsEndpoint = "/bnetserver/gameAccounts/";
     
-    private const string GetPortalEndpoint = "/bnetserver/portal/";
+    private const string PortalEndpoint = "/bnetserver/portal/";
     
-    private const string GetLoginEndpoint = "/bnetserver/login/";
+    private const string LoginEndpoint = "/bnetserver/login/";
     
-    private const string GetRefreshLoginTicketEndpoint = "/bnetserver/refreshLoginTicket/";
+    private const string RefreshLoginTicketEndpoint = "/bnetserver/refreshLoginTicket/";
     
     private readonly JsonSerializerOptions _serializerOptions =
         new() { Converters = { new AuthenticationStateJsonConverter() } };
@@ -58,9 +58,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
         
         var clearPassword = Encoding.UTF8.GetString(decrypted);
         var response = await soapClient.CommandHandler.Auth.CreateAccountAsync(request.Username, Encoding.UTF8.GetString(decrypted));
-        
-        Console.WriteLine(clearPassword);
-        
+                
         return response.IsSuccess ? TypedResults.Ok(response.Result) : TypedResults.InternalServerError();
     }
 
@@ -75,7 +73,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
     {
         using var client = httpClient.CreateClient("TrinityCore");
 
-        var portal = await client.GetStringAsync(GetPortalEndpoint);
+        var portal = await client.GetStringAsync(PortalEndpoint);
         
         return TypedResults.Ok(portal);
     }
@@ -100,7 +98,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
         
         using var client = httpClient.CreateClient("TrinityCore");
         
-        var request = CreateRequest(GetGameAccountsEndpoint, gameToken, HttpMethod.Get);
+        var request = CreateRequest(GameAccountsEndpoint, gameToken, HttpMethod.Get);
         var response = await client.SendAsync(request);
         
         if (!response.IsSuccessStatusCode)
@@ -139,7 +137,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
 
         using var client = httpClient.CreateClient("TrinityCore");
         
-        var request = await client.PostAsJsonAsync(GetLoginEndpoint, new LoginForm(
+        var request = await client.PostAsJsonAsync(LoginEndpoint, new LoginForm(
             PlatformId: Environment.OSVersion.VersionString,
             ProgramId: "Titan Web API",
             Version: "1.0.0.0",
@@ -187,7 +185,7 @@ public sealed class AccountService(IConfiguration configuration, RsaService rsaS
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, username),
-            new(ClaimTypes.Sid, gameToken)
+            new(ClaimTypes.Sid, gameToken) //@TODO: Maybe use another claim type for the game token...
         };
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetValue<string>("Identity:Key")!));

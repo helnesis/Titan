@@ -11,7 +11,7 @@ using Titan.Domain.Enums;
 using Titan.Persistence.Extensions;
 using Titan.Persistence.Queries;
 using Titan.Persistence.Repositories.Interfaces;
-using Titan.Shared;
+using Titan.Shared.Helpers;
 
 namespace Titan.Persistence.Repositories.Implementations;
 

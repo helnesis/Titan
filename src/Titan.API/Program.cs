@@ -157,11 +157,10 @@ else
 }
 
 
-// Launcher endpoints
+if (app.Services.GetService<RsaService>() is var rsaService)
+    .rsaService.GenerateKeys();
 
-app.MapGet("/api/launcher/ping", () => "pong")
-    .Produces(StatusCodes.Status200OK)
-    .AllowAnonymous();
+// Launcher endpoints
 
 app.MapGet("/api/launcher/public-key", ([FromServices] RsaService keyService)
     => keyService.GenerateKeys())

@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestPlatform.Common.Utilities;
-using Titan.Shared;
+using Titan.Shared.Helpers;
 
 namespace Titan.Tests;
 
