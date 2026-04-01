@@ -157,8 +157,6 @@ else
 }
 
 
-if (app.Services.GetService<RsaService>() is var rsaService)
-    .rsaService.GenerateKeys();
 
 // Launcher endpoints
 
@@ -210,7 +208,7 @@ app.MapGet("/api/item/", async ([FromServices] ItemService itemService)
     .AllowAnonymous();
 
 app.MapPost("/api/item/", async ([FromBody] ItemTemplate item, [FromServices] ItemService itemService)
-        => await itemService.CreateItem(item))
+        => await itemService.CreateOrUpdateItem(item))
     .AllowAnonymous();
 
 // Gameobject endpoints

@@ -1,6 +1,8 @@
 ﻿using MySqlConnector;
 using Titan.API.Exceptions.Base;
 using Titan.API.Helpers;
+using Titan.API.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Titan.API.Exceptions.Handlers;
 
@@ -12,9 +14,8 @@ public sealed class MySqlExceptionHandler(Exception exception) : BaseExceptionHa
     public override async Task HandleException(HttpContext context, ILogger? logger = null)
     {
         var databaseException = Error as MySqlException;
-        var detailsBuilder = ProblemBuilder.Builder;
 
-        detailsBuilder
+        var detailsBuilder = ProblemDetails.Builder
             .WithStatusCode(StatusCode)
             .WithTitle(ErrorType)
             .WithInstance(context.Request.Path);

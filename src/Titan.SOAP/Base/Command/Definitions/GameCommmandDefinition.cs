@@ -10,7 +10,7 @@ public static class GameCommandDefinition
 {
     private static GameCommandMap Commands => new()
     {
-        { GameCommand.CreateAccount, "bnetaccount create " },
+        { GameCommand.CreateAccount, "bnetaccount create" },
         { GameCommand.CreateGameAccount, "bnetaccount gameaccountcreate" }
     };
     

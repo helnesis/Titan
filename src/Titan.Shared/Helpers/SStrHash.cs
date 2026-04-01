@@ -24,7 +24,7 @@ public static class SStrHash
         {
             var c = t;
 
-            if (!useCaseConvention) c = c == '/' ? '\\' : char.ToUpper(c);
+            if (useCaseConvention) c = c == '/' ? '\\' : char.ToUpper(c);
 
             seed = (HashTable[c >> 4] - HashTable[c & 0xF]) ^ (shift + seed);
             shift = c + seed + 33 * shift + 3;

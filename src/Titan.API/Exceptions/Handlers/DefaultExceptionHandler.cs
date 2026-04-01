@@ -1,5 +1,6 @@
-﻿using Titan.API.Exceptions.Base;
-using Titan.API.Helpers;
+﻿using Microsoft.AspNetCore.Mvc;
+using Titan.API.Exceptions.Base;
+using Titan.API.Extensions;
 
 namespace Titan.API.Exceptions.Handlers;
 
@@ -10,7 +11,7 @@ public sealed class DefaultExceptionHandler(Exception exception) : BaseException
 
     public override async Task HandleException(HttpContext context, ILogger? logger = null)
     {
-        var builder = ProblemBuilder.Builder
+        var builder = ProblemDetails.Builder
             .WithTitle(ErrorType)
             .WithStatusCode(Status)
             .WithDetails("An unhandled exception was thrown. Re-try the operation, if its occurs again, reports the error on the project Github.")

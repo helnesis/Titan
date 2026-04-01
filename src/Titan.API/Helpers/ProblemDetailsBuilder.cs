@@ -2,7 +2,7 @@
 
 namespace Titan.API.Helpers
 {
-    internal sealed class ProblemBuilder
+    internal sealed class ProblemDetailsBuilder
     {
         private int _status;
         
@@ -11,7 +11,6 @@ namespace Titan.API.Helpers
         private string? _details;
         
         private string? _instance;
-
         public ProblemDetails Build()
             => new()
             {
@@ -21,7 +20,7 @@ namespace Titan.API.Helpers
                 Instance = _instance
             };
 
-        public ProblemBuilder WithStatusCode(int statusCode)
+        public ProblemDetailsBuilder WithStatusCode(int statusCode)
         {
             if (statusCode is < 400 or > 599)
                 _status = StatusCodes.Status500InternalServerError;
@@ -30,24 +29,23 @@ namespace Titan.API.Helpers
             return this;
         }
 
-        public ProblemBuilder WithTitle(string title)
+        public ProblemDetailsBuilder WithTitle(string title)
         {
             _title = title;
             return this;
         }
 
-        public ProblemBuilder WithDetails(string details)
+        public ProblemDetailsBuilder WithDetails(string details)
         {
              _details = details;
             return this;
         }
-        public ProblemBuilder WithInstance(string instance)
+        public ProblemDetailsBuilder WithInstance(string instance)
         {
             _instance = instance;
             return this;
         }
 
-        public static ProblemBuilder Builder => new();
     }
 
 
