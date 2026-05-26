@@ -16,15 +16,15 @@ public static class SStrHash
     [MethodImpl(MethodImplOptions.AggressiveInlining)]    
     public static uint Hash(string tableName, bool useCaseConvention = false, uint seed = TableSeed)
     {
-        if (string.IsNullOrEmpty(tableName))  return 0;
+        if (string.IsNullOrEmpty(tableName)) return 0;
         
         var shift = 0xEEEEEEEE;
-        
+
         foreach (var t in tableName)
         {
             var c = t;
 
-            if (useCaseConvention) c = c == '/' ? '\\' : char.ToUpper(c);
+            if (useCaseConvention) c = (c == '/') ? '\\' : char.ToUpper(c);
 
             seed = (HashTable[c >> 4] - HashTable[c & 0xF]) ^ (shift + seed);
             shift = c + seed + 33 * shift + 3;

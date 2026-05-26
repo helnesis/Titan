@@ -1,0 +1,49 @@
+﻿@using Titan.Frontend.Client.Services.Titan
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@_theme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudLayout>
+    <MudAppBar Elevation="2" Dense="true">
+
+        <MudImage Src="images/titan-logo.png"
+                  Height="36" Width="36"
+                  Alt="Titan"
+                  Class="rounded-lg ml-1" />
+
+        <MudStack Row="true" AlignItems="AlignItems.Baseline" Spacing="2" Class="ml-3">
+            <MudText Typo="Typo.h5">Titan Web API</MudText>
+            <MudText Typo="Typo.caption" Color="Color.Secondary">v0.1</MudText>
+        </MudStack>
+
+        <MudSpacer />
+
+        <MudIconButton Icon="@DarkLightModeButtonIcon"
+                       Color="Color.Inherit"
+                       Title="@(_isDarkMode ? "Light Mode" : "Dark Mode")"
+                       OnClick="@DarkModeToggle" />
+
+       <MudButton>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.ManageAccounts"
+                         Color="Color.Inherit"
+                         Target="_blank" />
+                <MudText>My Account</MudText>
+            </MudStack>
+       </MudButton>
+
+    </MudAppBar>
+
+    <MudMainContent Class="pt-16 pa-4">
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

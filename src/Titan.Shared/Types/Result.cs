@@ -1,6 +1,17 @@
 ﻿namespace Titan.Shared.Types;
 
-public readonly ref struct Result<T> where T : class 
+
+public readonly struct Result
+{
+    public readonly string? Error { get; init; }
+    public readonly bool IsSuccess { get; init; }
+    internal Result(bool isSuccess, string? error) =>
+        (IsSuccess, Error) = (isSuccess, error);
+    public static Result Ok() => new(true, null);
+    public static Result Failure(string error) => new(false, error);
+}
+
+public readonly struct Result<T> where T : class 
 {
     /// <summary>
     /// Gets the value contained in the current instance.
@@ -17,7 +28,7 @@ public readonly ref struct Result<T> where T : class
     /// </summary>
     public readonly bool IsSuccess { get; init; }
 
-    private Result(bool isSuccess, T value, string? error) =>
+    internal Result(bool isSuccess, T value, string? error) =>
         (IsSuccess, Value, Error) = (isSuccess, value, error);
 
     /// <summary>

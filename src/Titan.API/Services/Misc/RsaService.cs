@@ -31,7 +31,7 @@ public sealed class RsaService
     /// Generate a new RSA key pair.
     /// </summary>
     /// <returns>The public RSA key.</returns>
-    public Span<byte> GenerateKeys()
+    public ReadOnlyMemory<byte> GenerateKeys()
     {
         if (_publicKey != null)
             return _publicKey;
